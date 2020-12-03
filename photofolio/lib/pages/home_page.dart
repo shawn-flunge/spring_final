@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:photofolio/pages/edit_page.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class HomePage extends StatelessWidget {
@@ -44,17 +45,21 @@ class HomePage extends StatelessWidget {
               child: Text('vvvvvvvvvvvvvvvvvvvvvvvvvvvvv'),
               onPressed: () { _showMyDialog(context);}
             ),
-            RaisedButton(
-              child: Text('show post'),
-              onPressed: () { showPostDialog(context);}
-            ),
+            
             RaisedButton(
               child: Text('show login'),
               onPressed: () { showLoginDialog(context);}
             ),
             RaisedButton(
-              child: Text('show zxv'),
-              onPressed: () { _zxv(context);}
+              child: Text('show post'),
+              onPressed: () { showPostDialog(context);}
+            ),
+
+            RaisedButton(
+              child: Text('editing page'),
+              onPressed: () { 
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) { return EditPage();}));
+              }
             ),
         ],
       )
@@ -260,6 +265,34 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  // Future<void> showPostDialog(BuildContext context){
+  //   return showGeneralDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     barrierColor: Colors.pink[500].withAlpha(30),
+  //     barrierLabel: "ff" ,
+  //     transitionDuration: new Duration(seconds: 1),
+      
+  //     pageBuilder: (BuildContext con, Animation ani, Animation secAni){
+  //       return Center(
+  //         child: Container(
+  //           width: MediaQuery.of(context).size.width*0.8,
+  //           height: MediaQuery.of(context).size.height*0.7,
+  //           color: Colors.lightBlue,
+  //           child: RaisedButton(
+  //             child : Text('close'),
+              
+  //             onPressed: (){
+  //               Navigator.of(context).pop(context);
+  //             },
+  //           ),
+  //         ),
+  //       );
+  //     }
+
+  //   );
+  // }
+
   Future<void> showPostDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
@@ -269,19 +302,15 @@ class HomePage extends StatelessWidget {
       transitionDuration: new Duration(seconds: 1),
       
       pageBuilder: (BuildContext con, Animation ani, Animation secAni){
-        return Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width -100,
-            height: MediaQuery.of(context).size.height -500,
-            color: Colors.lightBlue,
-            child: RaisedButton(
-              child : Text('close'),
-              
-              onPressed: (){
-                Navigator.of(context).pop(context);
-              },
-            ),
-          ),
+        
+        return AlertDialog(
+          elevation: 10,
+         title: Text('글쓰기'), 
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: MediaQuery.of(context).size.width*0.8,
+            child: EditPage(),
+          )
         );
       }
 

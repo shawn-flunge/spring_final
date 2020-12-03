@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:photofolio/pages/edit_page.dart';
 import 'app_view.dart';
 import 'routes/router_generator.dart';
 import 'routes/routes.dart';
+
+
 
 
 void main() {

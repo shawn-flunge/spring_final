@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:photofolio/pages/edit_page.dart';
+import 'package:photofolio/pages/login_page.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class HomePage extends StatelessWidget {
@@ -305,7 +306,7 @@ class HomePage extends StatelessWidget {
         
         return AlertDialog(
           elevation: 10,
-         title: Text('글쓰기'), 
+          title: Text('글쓰기'), 
           contentPadding: EdgeInsets.zero,
           content: Container(
             width: MediaQuery.of(context).size.width*0.8,
@@ -322,39 +323,17 @@ Future<void> showLoginDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
       
-      barrierColor: Colors.pink[500].withAlpha(30),
+      barrierColor: Colors.blue.withAlpha(70),
       transitionDuration: new Duration(milliseconds: 400),
-      
+      //barrierDismissible: false,
       pageBuilder: (BuildContext con, Animation ani, Animation secAni){
-        return Center(
-          child: Container(
-            
-            width: MediaQuery.of(context).size.width -500,
-            height: MediaQuery.of(context).size.height -200,
-            color: Colors.lightBlue,
-            child: Column(
-
-              children: [
-                TextField(
-                  
-                ),
-                TextField(
-                  
-                ),
-                RaisedButton(
-                  child: Text('login'),
-                  onPressed: (){
-                     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                    Navigator.of(context).pop();
-
-                   
-                  },
-                )
-
-
-              ],
-            ) 
-          ),
+        return AlertDialog(
+          elevation: 10,
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: MediaQuery.of(context).size.width*0.4,
+            child: LoginPage(),
+          )
         );
       }
 

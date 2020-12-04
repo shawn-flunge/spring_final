@@ -306,7 +306,7 @@ class HomePage extends StatelessWidget {
         
         return AlertDialog(
           elevation: 10,
-          title: Text('글쓰기'), 
+       
           contentPadding: EdgeInsets.zero,
           content: Container(
             width: MediaQuery.of(context).size.width*0.8,
@@ -329,10 +329,31 @@ Future<void> showLoginDialog(BuildContext context){
       pageBuilder: (BuildContext con, Animation ani, Animation secAni){
         return AlertDialog(
           elevation: 10,
-          contentPadding: EdgeInsets.zero,
+          //backgroundColor: Colors.yellow,
+         // contentPadding: EdgeInsets.zero,
+          // content: Container(
+          //   width: MediaQuery.of(context).size.width*0.4,
+          //   child: LoginPage(),
+          // )
           content: Container(
-            width: MediaQuery.of(context).size.width*0.4,
-            child: LoginPage(),
+            width: MediaQuery.of(context).size.width*0.3,
+            child: SingleChildScrollView(
+            padding: EdgeInsets.zero,
+            //width: MediaQuery.of(context).size.width*0.4,
+            child: Column(
+              children: [
+                Align(
+              child: IconButton(
+                  iconSize: 20,
+                  icon: Icon(Icons.cancel_outlined,),
+                  onPressed: () => Navigator.of(context).pop(),
+              ), 
+              alignment: FractionalOffset(1, 0),
+            ),
+                LoginPage()
+              ],
+            ),
+          ),
           )
         );
       }

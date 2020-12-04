@@ -1,24 +1,26 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-class AboutPage extends StatelessWidget {
+class AboutPage extends StatefulWidget{
+
+  AboutPageState createState() => AboutPageState();
+}
+
+
+
+class AboutPageState extends State<AboutPage> {
+  TextEditingController introduceController;
+
+  
+
   @override
   Widget build(BuildContext context) {
-    // return Center(
-    //   child: Container(
-    //     child: Text(
-    //       'About Page',
-    //       style: TextStyle(fontSize: 30),
-    //     ),
-        
-    //   ),
-    // );
-
+    //introduceController.text ="sgg";
     return Scaffold(
 
       body: ListView(
         children: [
-          userInfoSection,
+          userInfoSection(context),
           const Divider(
             color: Colors.black38,
             height: 30,
@@ -36,81 +38,72 @@ class AboutPage extends StatelessWidget {
   }
 
 
-  Widget userInfoSection = Container(
-    margin: EdgeInsets.fromLTRB(100, 10, 100, 10),
-    //color: Colors.pink,
-    padding: const EdgeInsets.all(100),
-    
-    child: Row(
-      //crossAxisAlignment: CrossAxisAlignment.center,
-      // mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        //프로필사진, 아이디, 간단 소개
-        Row(
-          children: [
-             SizedBox(
-              width: 150,
-              height: 150,
-              child: CircleAvatar(
-                backgroundImage: NetworkImage('https://picsum.photos/250?image=9'),
-                backgroundColor: Color(0xFFFFFFFF),
-              ),
-            ),
-            Padding(padding: EdgeInsets.all(30),),
-            Column(
-              // mainAxisSize: MainAxisSize.min,
-                // mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                
-                Text(
-                  'flunge',
-                  style: TextStyle(fontSize: 40),
-                ),
-                SizedBox(
-                  child: Text('spring framework 기말 과제 \n flutter로 작업중'),
-                  //width: 100,
-                  //height: 100,
-                ),
-              ],
-            ),
-          ],
-        ),
-       
-        Padding(padding: EdgeInsets.all(30),),
+  Widget userInfoSection(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
+      color: Colors.pink,
+      padding: EdgeInsets.fromLTRB(200, 50, 200, 30),
+      
+      child: Row(
+        //crossAxisAlignment: CrossAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          //프로필사진, 아이디, 간단 소개
+          Row(
+            children: [
+              Column(
+                children: [
+                  SizedBox(
+                    width: 150,
+                    height: 150,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage('https://picsum.photos/250?image=9'),
+                      backgroundColor: Color(0xFFFFFFFF),
+                    ),
+                  ),
+                  
 
-        //팔로우, 팔로워
-        Row(
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Text('팔로우',
-                  style: TextStyle(fontSize: 20),
-                ),
-                Text('0', 
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-            Padding(padding: EdgeInsets.all(20),),
-            Column(
-              children: <Widget>[
-                Text('팔로워',
-                  style: TextStyle(fontSize: 20),
-                ),
-                Text('0', 
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )
-              ],
-            )
-          ],
-        ),
+                ],
+              ),
+              
+              Padding(padding: EdgeInsets.all(30),),
+              Column(
+                // mainAxisSize: MainAxisSize.min,
+                //mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                
+                children: <Widget>[           
+                  Container(
+                    color: Colors.white,
+                    child: Text(
+                      'flunge',
+                      style: TextStyle(fontSize: 40),
+                    ),
+                  ),
+                  Container(
+                    color: Colors.white,
+                    child: Text(
+                      'gaggagag\nagsgs\n\ndfgdfgdvvvvvvvvvvvvvvvvvvvvf\n'
+                    ),
+                  )
+                  
+            
+                ],
+              ),
+            ],
+          ),
         
-        
-      ],
-    ),
-  );
+          Padding(padding: EdgeInsets.all(30),),
+
+          //팔로우, 팔로워
+          
+          
+          
+        ],
+      ),
+    );
+  }
 
   Widget userInterestSection = Container(
     margin: EdgeInsets.all(300),
@@ -171,6 +164,32 @@ class AboutPage extends StatelessWidget {
 
 }
 
+
+// Row(
+//                     children: <Widget>[
+//                       Column(
+//                         children: <Widget>[
+//                           Text('팔로우',
+//                             style: TextStyle(fontSize: 20),
+//                           ),
+//                           Text('0', 
+//                             style: TextStyle(fontWeight: FontWeight.bold),
+//                           )
+//                         ],
+//                       ),
+//                       Padding(padding: EdgeInsets.all(20),),
+//                       Column(
+//                         children: <Widget>[
+//                           Text('팔로워',
+//                             style: TextStyle(fontSize: 20),
+//                           ),
+//                           Text('0', 
+//                             style: TextStyle(fontWeight: FontWeight.bold),
+//                           )
+//                         ],
+//                       )
+//                     ],
+//                   ),
 
 
 

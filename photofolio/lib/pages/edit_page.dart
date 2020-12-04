@@ -54,6 +54,14 @@ class EditPageState extends State<EditPage>{
         ),
         body: Column(
           children: [
+            Align(
+              child: IconButton(
+                  iconSize: 20,
+                  icon: Icon(Icons.cancel_outlined),
+                  onPressed: () => Navigator.of(context).pop(),
+              ), 
+              alignment: FractionalOffset(1, 0),
+            ),
             Flexible(
               flex: 1,
               child: Swiper(
@@ -76,22 +84,16 @@ class EditPageState extends State<EditPage>{
                   print("onTap : "+index.toString());
                 },
                 onIndexChanged: (int index) {
-
                   currentImage = images[i];
-
                   commentsMap[currentImage.semanticLabel] = commentController.text;
-
-      
                   commentController.clear();
-
                   commentController.text = commentsMap[images[index].semanticLabel];
                   i=index;
                 },
               ),
             ),
             Flexible(
-              child: TextField(controller: commentController,),
-              
+              child: TextField(controller: commentController,), 
             ),
             Flexible(
               flex: 1,

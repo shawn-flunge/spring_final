@@ -11,7 +11,25 @@ class AboutPage extends StatefulWidget{
 class AboutPageState extends State<AboutPage> {
   TextEditingController introduceController;
 
+  List<String> ss = ['ff','gg','ewerqrq','vvv','zzz','qqq','tt'];
+  // var ac= <ActionChip>[];
+  List<ActionChip> ac = List<ActionChip>();
   
+  @override
+  void initState() {
+    
+    for(int i=0;i<ss.length;i++){
+      ac.add(
+        ActionChip(
+          label: Text(ss[i]),
+          avatar: Icon(Icons.check),
+          backgroundColor: Colors.cyan,
+          onPressed: (){print(ss[i]);},
+        )
+      );
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,35 +80,43 @@ class AboutPageState extends State<AboutPage> {
                       backgroundColor: Color(0xFFFFFFFF),
                     ),
                   ),
+                  Container(
+                    width: 200,
+                    child: Wrap(
+                      children: ac,
+                    ),
+                  ),
+                  
                   
 
                 ],
               ),
               
               Padding(padding: EdgeInsets.all(30),),
-              Column(
-                // mainAxisSize: MainAxisSize.min,
-                //mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                
-                children: <Widget>[           
-                  Container(
-                    color: Colors.white,
-                    child: Text(
-                      'flunge',
-                      style: TextStyle(fontSize: 40),
-                    ),
-                  ),
-                  Container(
-                    color: Colors.white,
-                    child: Text(
-                      'gaggagag\nagsgs\n\ndfgdfgdvvvvvvvvvvvvvvvvvvvvf\n'
-                    ),
-                  )
+              Container(
+                child: Column(
+                  // mainAxisSize: MainAxisSize.min,
+                  //mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   
-            
-                ],
-              ),
+                  children: <Widget>[           
+                    Container(
+                      color: Colors.white,
+                      child: Text(
+                        'flunge',
+                        style: TextStyle(fontSize: 40),
+                      ),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: Text(
+                        'gaggagag\nagsgs\n\ndfgdfgdvvvvvvvvvvvvvvvvvvvvf\n'
+                      ),
+                    )                           
+                  ],
+                ),
+              )
+              
             ],
           ),
         

@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:photofolio/pages/edit_page.dart';
+import 'package:photofolio/pages/login_page.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class HomePage extends StatelessWidget {
@@ -44,17 +46,21 @@ class HomePage extends StatelessWidget {
               child: Text('vvvvvvvvvvvvvvvvvvvvvvvvvvvvv'),
               onPressed: () { _showMyDialog(context);}
             ),
-            RaisedButton(
-              child: Text('show post'),
-              onPressed: () { showPostDialog(context);}
-            ),
+            
             RaisedButton(
               child: Text('show login'),
               onPressed: () { showLoginDialog(context);}
             ),
             RaisedButton(
-              child: Text('show zxv'),
-              onPressed: () { _zxv(context);}
+              child: Text('show post'),
+              onPressed: () { showPostDialog(context);}
+            ),
+
+            RaisedButton(
+              child: Text('editing page'),
+              onPressed: () { 
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) { return EditPage();}));
+              }
             ),
         ],
       )
@@ -260,6 +266,34 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  // Future<void> showPostDialog(BuildContext context){
+  //   return showGeneralDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     barrierColor: Colors.pink[500].withAlpha(30),
+  //     barrierLabel: "ff" ,
+  //     transitionDuration: new Duration(seconds: 1),
+      
+  //     pageBuilder: (BuildContext con, Animation ani, Animation secAni){
+  //       return Center(
+  //         child: Container(
+  //           width: MediaQuery.of(context).size.width*0.8,
+  //           height: MediaQuery.of(context).size.height*0.7,
+  //           color: Colors.lightBlue,
+  //           child: RaisedButton(
+  //             child : Text('close'),
+              
+  //             onPressed: (){
+  //               Navigator.of(context).pop(context);
+  //             },
+  //           ),
+  //         ),
+  //       );
+  //     }
+
+  //   );
+  // }
+
   Future<void> showPostDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
@@ -269,19 +303,15 @@ class HomePage extends StatelessWidget {
       transitionDuration: new Duration(seconds: 1),
       
       pageBuilder: (BuildContext con, Animation ani, Animation secAni){
-        return Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width -100,
-            height: MediaQuery.of(context).size.height -500,
-            color: Colors.lightBlue,
-            child: RaisedButton(
-              child : Text('close'),
-              
-              onPressed: (){
-                Navigator.of(context).pop(context);
-              },
-            ),
-          ),
+        
+        return AlertDialog(
+          elevation: 10,
+       
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: MediaQuery.of(context).size.width*0.8,
+            child: EditPage(),
+          )
         );
       }
 
@@ -293,39 +323,38 @@ Future<void> showLoginDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
       
-      barrierColor: Colors.pink[500].withAlpha(30),
+      barrierColor: Colors.blue.withAlpha(70),
       transitionDuration: new Duration(milliseconds: 400),
-      
+      //barrierDismissible: false,
       pageBuilder: (BuildContext con, Animation ani, Animation secAni){
-        return Center(
-          child: Container(
-            
-            width: MediaQuery.of(context).size.width -500,
-            height: MediaQuery.of(context).size.height -200,
-            color: Colors.lightBlue,
+        return AlertDialog(
+          elevation: 10,
+          //backgroundColor: Colors.yellow,
+         // contentPadding: EdgeInsets.zero,
+          // content: Container(
+          //   width: MediaQuery.of(context).size.width*0.4,
+          //   child: LoginPage(),
+          // )
+          content: Container(
+            width: MediaQuery.of(context).size.width*0.3,
+            child: SingleChildScrollView(
+            padding: EdgeInsets.zero,
+            //width: MediaQuery.of(context).size.width*0.4,
             child: Column(
-
               children: [
-                TextField(
-                  
-                ),
-                TextField(
-                  
-                ),
-                RaisedButton(
-                  child: Text('login'),
-                  onPressed: (){
-                     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                    Navigator.of(context).pop();
-
-                   
-                  },
-                )
-
-
+                Align(
+              child: IconButton(
+                  iconSize: 20,
+                  icon: Icon(Icons.cancel_outlined,),
+                  onPressed: () => Navigator.of(context).pop(),
+              ), 
+              alignment: FractionalOffset(1, 0),
+            ),
+                LoginPage()
               ],
-            ) 
+            ),
           ),
+          )
         );
       }
 

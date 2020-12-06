@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:photofolio/store/User.dart';
 
 class SignUpPage extends StatefulWidget{
 
@@ -17,6 +18,8 @@ class SignUpPageState extends State<SignUpPage>{
   var mediaQueryWidth; 
   var mainPadding;
 
+  var me=User();
+  
   @override
   Widget build(BuildContext context) {
     
@@ -116,7 +119,7 @@ class SignUpPageState extends State<SignUpPage>{
           //child: Text('text'),
           child: TextField(
             controller: idTextBoxController,
-            onChanged: (value) => {},//userID = value,
+            onChanged: (value) => {me.userEmail=value},//userID = value,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
@@ -126,7 +129,7 @@ class SignUpPageState extends State<SignUpPage>{
                 Icons.email,//Icons.account_circle,
                 color: Color(0xFF81C0D5),
               ),
-              hintText: 'ID',
+              hintText: 'Email',
               hintStyle: TextStyle(color: Colors.black38),
             ),
           ),
@@ -142,7 +145,7 @@ class SignUpPageState extends State<SignUpPage>{
       
       children: <Widget>[
         Text(
-          '아이디',
+          '닉네임',
           style: TextStyle(
               color: Colors.blueGrey[300],
               fontSize: 13,
@@ -166,8 +169,8 @@ class SignUpPageState extends State<SignUpPage>{
           //child: Text('text'),
           child: TextField(
             controller: idTextBoxController,
-            onChanged: (value) => {},//userID = value,
-            keyboardType: TextInputType.emailAddress,
+            onChanged: (value) => {me.userNickName=value},//userID = value,
+            keyboardType: TextInputType.text,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -176,7 +179,7 @@ class SignUpPageState extends State<SignUpPage>{
                 Icons.account_circle,//Icons.account_circle,
                 color: Color(0xFF81C0D5),
               ),
-              hintText: 'ID',
+              hintText: 'NickName',
               hintStyle: TextStyle(color: Colors.black38),
             ),
           ),
@@ -212,7 +215,7 @@ class SignUpPageState extends State<SignUpPage>{
           width: mediaQueryWidth*0.4,
           child: TextField(
             controller: pwTextBoxController,
-            onChanged: (value) =>  {},//userPassword = value,
+            onChanged: (value) =>  {me.userPassword=value},//userPassword = value,
             obscureText: true,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
@@ -258,7 +261,7 @@ class SignUpPageState extends State<SignUpPage>{
           width: mediaQueryWidth*0.4,
           child: TextField(
             controller: pwTextBoxController,
-            onChanged: (value) =>  {},//userPassword = value,
+            onChanged: (value) =>  {me.userPassword=value},//userPassword = value,
             obscureText: true,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
@@ -297,9 +300,7 @@ class SignUpPageState extends State<SignUpPage>{
         elevation: 5,
         onPressed: () {
           Navigator.of(context).pop();
-
-
-
+          User.infoPrint(me);
         },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),

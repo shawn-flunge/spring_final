@@ -2,7 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:photofolio/pages/edit_page.dart';
 import 'package:photofolio/pages/login_page.dart';
+import 'package:photofolio/pages/signup_page.dart';
+
 import 'package:rflutter_alert/rflutter_alert.dart';
+
 
 class HomePage extends StatelessWidget {
   @override
@@ -59,7 +62,7 @@ class HomePage extends StatelessWidget {
             RaisedButton(
               child: Text('editing page'),
               onPressed: () { 
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) { return EditPage();}));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) { return SignUpPage();}));
               }
             ),
         ],

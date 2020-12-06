@@ -4,7 +4,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:photofolio/pages/edit_page.dart';
+import 'package:photofolio/pages/signup_page.dart';
 
 class LoginPage extends StatefulWidget{
 
@@ -22,7 +22,6 @@ class LoginPageState extends State<LoginPage>{
   Widget build(BuildContext context) {
     
     return Container(
-      //color: Colors.brown,
       margin: EdgeInsets.fromLTRB(60, 0, 60, 30),
       child: Column(
         children: [
@@ -40,19 +39,8 @@ class LoginPageState extends State<LoginPage>{
             endIndent: 20,
             indent: 20,
           ),
-          FlatButton(
-            child: Text('create account'),
-            onPressed: (){print('tapppp');},
-          ),
-          // RichText(
-          //   text: TextSpan(
-          //     text: ' create account',
-          //     style: TextStyle(
-          //       color: Colors.blue[400]
-          //     ),
-          //     recognizer: TapGestureRecognizer() ..onTap = (){print('tap');}
-          //   ),
-          // )
+          buildCABtn(context)
+          
         ],
       ),
     );
@@ -160,7 +148,6 @@ class LoginPageState extends State<LoginPage>{
         elevation: 5,
         onPressed: () {
           Navigator.of(context).pop();
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> EditPage()));
         },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -168,12 +155,22 @@ class LoginPageState extends State<LoginPage>{
         color: Color(0xFF0275D8),
         child: Text('로그인',
           style: TextStyle(
-              color: Color(0xFFAFD9FE),
-              fontSize: 18,
-              fontWeight: FontWeight.bold
+            color: Color(0xFFAFD9FE),
+            fontSize: 18,
+            fontWeight: FontWeight.bold
           )
         ),
       ),
+    );
+  }
+
+  Widget buildCABtn(BuildContext context){
+    return FlatButton(
+      child: Text('create account'),
+      onPressed: (){
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> SignUpPage()));
+      },
     );
   }
 

@@ -5,17 +5,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:photofolio/pages/signup_page.dart';
+import 'package:photofolio/provider/user_provider.dart';
 
 class LoginPage extends StatefulWidget{
-
-  LoginPageState createState() => LoginPageState();  
+  UserLogin userLogin;
+  LoginPage(this.userLogin);
+  LoginPageState createState() => LoginPageState(userLogin);  
 }
 
 
 class LoginPageState extends State<LoginPage>{
 
+  UserLogin userLogin;
+  LoginPageState(this.userLogin);
+
   TextEditingController idTextBoxController;
-  TextEditingController pwTextBoxController;
+  TextEditingController pwdTextBoxController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    idTextBoxController = TextEditingController();
+    pwdTextBoxController = TextEditingController();
+  }
 
 
   @override
@@ -120,7 +132,7 @@ class LoginPageState extends State<LoginPage>{
               ]),
           height: 50,
           child: TextField(
-            controller: pwTextBoxController,
+            controller: pwdTextBoxController,
             onChanged: (value) =>  {},//userPassword = value,
             obscureText: true,
             style: TextStyle(color: Colors.black87),
@@ -141,12 +153,14 @@ class LoginPageState extends State<LoginPage>{
   }
 
   Widget buildLoginBtn() {
+    //print(idTextBoxController.text.toString());
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25),
       width: double.infinity,
       child: RaisedButton(
         elevation: 5,
         onPressed: () {
+          userLogin.login(idTextBoxController.text.toString(), pwdTextBoxController.text.toString());
           Navigator.of(context).pop();
         },
         padding: EdgeInsets.all(15),

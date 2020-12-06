@@ -1,10 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:photofolio/pages/edit_page.dart';
-import 'package:photofolio/pages/login_page.dart';
 import 'package:photofolio/pages/signup_page.dart';
-
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -56,20 +53,6 @@ class HomePage extends StatelessWidget {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) { return SignUpPage();}));
               }
             ),
-            // Container(
-            //   margin: EdgeInsets.all(100),
-            //   padding: EdgeInsets.all(10),
-            //   color: Colors.pink[300],
-            //   width: double.infinity,
-            //   height: 300,
-            //   child: Center(
-            //     child: GridView.count(
-            //       shrinkWrap: true,
-            //       crossAxisCount: 3,
-            //       children: tt
-            //     ),
-            //   )
-            // )
             Container(
               margin: EdgeInsets.all(100),
               padding: EdgeInsets.all(10),
@@ -228,7 +211,7 @@ Future<void> showLoginDialog(BuildContext context){
               ), 
               alignment: FractionalOffset(1, 0),
             ),
-                LoginPage()
+                //LoginPage(u)
               ],
             ),
           ),

@@ -1,5 +1,7 @@
 
 
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -42,16 +44,16 @@ class SignUpPageState extends State<SignUpPage>{
         // width: mediaQueryWidth,
         margin: EdgeInsets.all(100),
         //color: Colors.blue,
-        // decoration: BoxDecoration(
-        //   color: Colors.white,
-        //   borderRadius: BorderRadius.circular(5),
-        //   boxShadow: [
-        //     BoxShadow(
-        //         color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
-        //   ]
-        // ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
+          ]
+        ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             inputColumn(context),
             buildImage(),
@@ -75,7 +77,7 @@ class SignUpPageState extends State<SignUpPage>{
         children: [
           Text('logo'),
           buildEmail(context),
-          buildId(context),
+          buildNick(context),
           buildPassword(context),
           buildPasswordCheck(context),
           buildSignUpBtn()
@@ -135,14 +137,14 @@ class SignUpPageState extends State<SignUpPage>{
     );
   }
 
-   Widget buildId(BuildContext context) {
+   Widget buildNick(BuildContext context) {
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       
       children: <Widget>[
         Text(
-          '아이디',
+          '닉네임',
           style: TextStyle(
               color: Colors.blueGrey[300],
               fontSize: 13,
@@ -279,10 +281,17 @@ class SignUpPageState extends State<SignUpPage>{
 
   Widget buildImage(){
 
-    return Container(
+    // return Container(
+    //   width: mediaQueryWidth*0.2,
+    //   color: Colors.blue,
+    //   child: Image(
+    //     image: ,
+    //   ),
+    // );
+
+    return SizedBox(
       width: mediaQueryWidth*0.2,
-      color: Colors.blue,
-      child: Text('image'),
+      child: Image.asset('assets/signup_img.jpg'),
     );
 
 

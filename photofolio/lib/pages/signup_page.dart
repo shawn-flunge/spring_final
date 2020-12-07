@@ -121,7 +121,7 @@ class SignUpPageState extends State<SignUpPage>{
           //child: Text('text'),
           child: TextField(
             controller: idTextBoxController,
-            onChanged: (value) => {me.userEmail=value},//userID = value,
+            onChanged: (value) => {me.eMail=value},//userID = value,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
@@ -171,7 +171,7 @@ class SignUpPageState extends State<SignUpPage>{
           //child: Text('text'),
           child: TextField(
             controller: idTextBoxController,
-            onChanged: (value) => {me.userNickName=value},//userID = value,
+            onChanged: (value) => {me.nickname=value},//userID = value,
             keyboardType: TextInputType.text,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
@@ -217,7 +217,7 @@ class SignUpPageState extends State<SignUpPage>{
           width: mediaQueryWidth*0.4,
           child: TextField(
             controller: pwTextBoxController,
-            onChanged: (value) =>  {me.userPassword=value},//userPassword = value,
+            onChanged: (value) =>  {me.password=value},//userPassword = value,
             obscureText: true,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
@@ -263,7 +263,7 @@ class SignUpPageState extends State<SignUpPage>{
           width: mediaQueryWidth*0.4,
           child: TextField(
             controller: pwTextBoxController,
-            onChanged: (value) =>  {me.userPassword=value},//userPassword = value,
+            onChanged: (value) =>  {me.password=value},//userPassword = value,
             obscureText: true,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(

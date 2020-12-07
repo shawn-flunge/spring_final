@@ -74,7 +74,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget buildCard(){
+  Widget buildCard(){ // 카드를 추가 하기 위해서는 이미지와 Post 글을 받아야해요!
 
     // return Padding(
     //   padding: EdgeInsets.all(200),

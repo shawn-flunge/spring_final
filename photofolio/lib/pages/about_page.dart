@@ -101,14 +101,14 @@ class AboutPageState extends State<AboutPage> {
                   
                   children: <Widget>[           
                     Container(
-                      color: Colors.white,
+                      color: Colors.pink,
                       child: Text(
                         'flunge',
                         style: TextStyle(fontSize: 40),
                       ),
                     ),
                     Container(
-                      color: Colors.white,
+                      color: Colors.pink,
                       child: Text(
                         'gaggagag\nagsgs\n\ndfgdfgdvvvvvvvvvvvvvvvvvvvvf\n'
                       ),

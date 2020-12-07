@@ -23,12 +23,13 @@ class NavigationBarState extends State<NavigationBar>{
   @override
   Widget build(BuildContext context) {
     UserLogin userLogin = Provider.of<UserLogin>(context);
-    if(userLogin.getIsLoin()==false){
+    if(userLogin.getIsLogin()==false){
       login = "Login";
       setWidgets(userLogin);
     }
     else{
-      login = userLogin.getEmail();
+      login = userLogin.getNickName();
+      print('로그인이 되어 있는 상태라고 에러를 띄워보아요!');
       setWidgets(userLogin);
     }
       
@@ -133,13 +134,13 @@ class NavigationBarState extends State<NavigationBar>{
 
   setWidgets(UserLogin userLogin){
 
-    if(userLogin.getIsLoin() == false){
+    if(userLogin.getIsLogin() == false){
       widgets = <Widget>[
         Expanded(
             flex: 1,
             child: Container(
               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Text("logo"),
+              child:Text('PhotoFolioKR'),
             )
           ),
           NavigationItem(
@@ -149,7 +150,7 @@ class NavigationBarState extends State<NavigationBar>{
             onHighlight:onHighlight,
           ),
           RaisedButton(
-            child:Text(login + userLogin.getIsLoin().toString()),
+            child:Text(login + userLogin.getIsLogin().toString()),
             padding : const EdgeInsets.symmetric(horizontal: 40),
             color: Colors.greenAccent,     
             onPressed: (){
@@ -181,7 +182,7 @@ class NavigationBarState extends State<NavigationBar>{
             onHighlight:onHighlight,
           ),
           RaisedButton(
-            child:Text(login + userLogin.getIsLoin().toString()),
+            child:Text(login + userLogin.getIsLogin().toString()),
             padding : const EdgeInsets.symmetric(horizontal: 40),
             color: Colors.greenAccent,     
             onPressed: (){

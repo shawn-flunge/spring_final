@@ -148,7 +148,7 @@ class HomePage extends StatelessWidget {
        
           contentPadding: EdgeInsets.zero,
           content: Container(
-            width: MediaQuery.of(context).size.width*0.8,
+            width: MediaQuery.of(context).size.width*0.6,
             child: EditPage(),
           )
         );
@@ -183,7 +183,7 @@ class HomePage extends StatelessWidget {
   }
   
 
-Future<void> showLoginDialog(BuildContext context){
+  Future<void> showLoginDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
       
@@ -207,13 +207,13 @@ Future<void> showLoginDialog(BuildContext context){
             child: Column(
               children: [
                 Align(
-              child: IconButton(
-                  iconSize: 20,
-                  icon: Icon(Icons.cancel_outlined,),
-                  onPressed: () => Navigator.of(context).pop(),
-              ), 
-              alignment: FractionalOffset(1, 0),
-            ),
+                  child: IconButton(
+                      iconSize: 20,
+                      icon: Icon(Icons.cancel_outlined,),
+                      onPressed: () => Navigator.of(context).pop(),
+                  ), 
+                  alignment: FractionalOffset(1, 0),
+                ),
                 //LoginPage(u)
               ],
             ),
@@ -225,21 +225,22 @@ Future<void> showLoginDialog(BuildContext context){
     );
   }
 
-  Future<void> sss(BuildContext context){
+  Future<void> showfff(BuildContext context){
     showDialog<void>(
       context: context,
       builder: (context){
         return AlertDialog(
+          actions: [
+            RaisedButton(
+              child: Text('확인'),
+              onPressed: (){
+
+              },
+            ),
+          ],
           content: Column(
             children: [
-               FlatButton(
-                  child: Text("agagsggs"),
-                  onPressed: (){print("ff");},
-                ),
-                RaisedButton(
-                  child: Text('agsg'),
-                  onPressed: (){print("agsg");},
-                )
+              Text('사용중인 이메일입니다.'),           
             ],
           ),
         );

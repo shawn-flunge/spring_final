@@ -3,9 +3,6 @@ import 'app_view.dart';
 import 'routes/router_generator.dart';
 import 'routes/routes.dart';
 
-
-
-
 void main() {
   runApp(MyApp());
 }
@@ -16,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "first flutter web",
+      title: "PhotoFolioKR",
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity

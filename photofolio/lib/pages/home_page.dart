@@ -10,19 +10,28 @@ class HomePage extends StatelessWidget {
 
 
   List<Text> tt = List<Text>();
-  Widget widget;
+  List<Widget> widgets = List<Widget>();
+  var crossAxisCount =0;
 
   @override
   Widget build(BuildContext context) {
     UserLogin userLogin = Provider.of<UserLogin>(context);
 
     for(int i=0;i<10;i++){
-      tt.add(
-        Text(i.toString())
+      widgets.add(
+        // Text(i.toString())
+        buildCard(i)
+        // buildCard2(i)
       );
     }
 
+    if(MediaQuery.of(context).size.width>700)
+      crossAxisCount =3;
+    else
+      crossAxisCount=2;
+
     return SingleChildScrollView(
+      
       child: Column(
         children: [
           Text(
@@ -63,17 +72,19 @@ class HomePage extends StatelessWidget {
               }
             ),
             Container(
-              margin: EdgeInsets.all(100),
-              padding: EdgeInsets.all(10),
-              color: Colors.pink[300],
-              width: double.infinity,
-              height: 500,
+              //margin: EdgeInsets.fromLTRB(200, 10, 200, 0),
+              //padding: EdgeInsets.all(100),
+              //color: Colors.pink[300],
+              width: 1000,
+              // height: double.infinity,
               child: Center(
                 child: GridView.count(
                   shrinkWrap: true,
-                  crossAxisCount: 3,
+                  crossAxisCount: crossAxisCount,
+                  padding: EdgeInsets.all(10),
+
                   children: List<Widget>.generate(20, (index) {
-                    return buildCard();
+                    return buildCard(index);
                   })
                 ),
               )
@@ -83,86 +94,44 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget buildCard(){
+  Widget buildCard(int i){
 
-    // return Padding(
-    //   padding: EdgeInsets.all(200),
-    //   child: Container(
-    //     color: Colors.purple[200],
-    //     child: Text('gagsgd'),
-    //   ),
-    // );
-    return Container(
-      padding: EdgeInsets.all(30),
-      margin: EdgeInsets.all(100),
-      color: Colors.teal,
-      child: Text('gagsgd'),
+    return InkWell(
+
+      child: Card(
+        margin: EdgeInsets.all(20),      
+        elevation: 5,
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              title: Text(i.toString()),
+              subtitle: Text(
+                'subTitle',
+                style: TextStyle(color: Colors.black38),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Image(
+                image: Image.network('https://picsum.photos/250?image=9',fit: BoxFit.fill,).image,
+                width: double.maxFinite,         
+              ),
+            ),        
+          ],
+        ),
+      ),
+      onTap: (){print('safsdf');},
     );
 
-
   }
+
+
 
 
 
   Image img = Image.network('https://picsum.photos/250?image=9');
-
-  Future<void> _showMyDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      
-      builder: (context) {
-        return AlertDialog(
-          title: Text('AlertDialog Title'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('This is a demo alert dialog.'),
-                Text('Would you like to approve of this message?'),
-                img
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Approve'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // Future<void> showPostDialog(BuildContext context){
-  //   return showGeneralDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     barrierColor: Colors.pink[500].withAlpha(30),
-  //     barrierLabel: "ff" ,
-  //     transitionDuration: new Duration(seconds: 1),
-      
-  //     pageBuilder: (BuildContext con, Animation ani, Animation secAni){
-  //       return Center(
-  //         child: Container(
-  //           width: MediaQuery.of(context).size.width*0.8,
-  //           height: MediaQuery.of(context).size.height*0.7,
-  //           color: Colors.lightBlue,
-  //           child: RaisedButton(
-  //             child : Text('close'),
-              
-  //             onPressed: (){
-  //               Navigator.of(context).pop(context);
-  //             },
-  //           ),
-  //         ),
-  //       );
-  //     }
-
-  //   );
-  // }
+  
 
   Future<void> showEditPostDialog(BuildContext context){
     return showGeneralDialog(
@@ -202,8 +171,9 @@ class HomePage extends StatelessWidget {
           elevation: 10,
        
           contentPadding: EdgeInsets.zero,
-          content: Container(
-            width: MediaQuery.of(context).size.width*0.8,
+          content: 
+          Container(
+            width: MediaQuery.of(context).size.width*0.6,
             child: PostPage(),
           )
         );

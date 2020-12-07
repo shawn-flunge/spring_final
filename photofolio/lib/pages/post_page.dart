@@ -30,6 +30,14 @@ class PostPageState extends State<PostPage>{
 
         children: [
           //buildImageRow(),
+          Align(
+                child: IconButton(
+                    iconSize: 20,
+                    icon: Icon(Icons.cancel_outlined,),
+                    onPressed: () => Navigator.of(context).pop(),
+                ), 
+                alignment: FractionalOffset(1, 0),
+              ),
           Container(
             //color: Colors.deepPurple,
             margin: EdgeInsets.all(20),

@@ -1,17 +1,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:photofolio/pages/edit_page.dart';
+import 'package:photofolio/pages/post_page.dart';
 import 'package:photofolio/pages/signup_page.dart';
-
+import 'package:provider/provider.dart';
+import '../provider/user_provider.dart';
 
 class HomePage extends StatelessWidget {
 
 
   List<Text> tt = List<Text>();
-
+  Widget widget;
 
   @override
   Widget build(BuildContext context) {
+    UserLogin userLogin = Provider.of<UserLogin>(context);
 
     for(int i=0;i<10;i++){
       tt.add(
@@ -37,8 +40,8 @@ class HomePage extends StatelessWidget {
               onPressed: () { showLoginDialog(context);}
             ),
             RaisedButton(
-              child: Text('show post'),
-              onPressed: () { showPostDialog(context);}
+              child: Text('show Edit post'),
+              onPressed: () { showEditPostDialog(context);}
             ),
             RaisedButton(
               child: Text('settings'),
@@ -51,6 +54,12 @@ class HomePage extends StatelessWidget {
               child: Text('editing page'),
               onPressed: () { 
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) { return SignUpPage();}));
+              }
+            ),
+            RaisedButton(
+              child: Text('show post'),
+              onPressed: () { 
+                showPostDialog(context);
               }
             ),
             Container(
@@ -155,7 +164,7 @@ class HomePage extends StatelessWidget {
   //   );
   // }
 
-  Future<void> showPostDialog(BuildContext context){
+  Future<void> showEditPostDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
       barrierDismissible: false,
@@ -172,6 +181,30 @@ class HomePage extends StatelessWidget {
           content: Container(
             width: MediaQuery.of(context).size.width*0.8,
             child: EditPage(),
+          )
+        );
+      }
+
+    );
+  }
+
+  Future<void> showPostDialog(BuildContext context){
+    return showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.pink[500].withAlpha(30),
+      barrierLabel: "ff" ,
+      transitionDuration: new Duration(seconds: 1),
+      
+      pageBuilder: (BuildContext con, Animation ani, Animation secAni){
+        
+        return AlertDialog(
+          elevation: 10,
+       
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: MediaQuery.of(context).size.width*0.8,
+            child: PostPage(),
           )
         );
       }

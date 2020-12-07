@@ -306,9 +306,18 @@ class SignUpPageState extends State<SignUpPage>{
   Widget buildSignUpBtn() {
     var raisedButton = RaisedButton(
         elevation: 5,
-        onPressed: () {
-          Navigator.of(context).pop();
-          http.post('http://localhost:8080/api/signUp',body:me.toJson(),headers:{'Content-Type':'application/json'});
+        onPressed: () async{
+          String result;
+          final res=await http.post('http://localhost:8080/api/signUp',body:me.toJson(),headers:{'Content-Type':'application/json'});
+          print(res.body);
+          result=res.body;
+          if(result == 'Nick Duplicate'){ // 중복 되었을 때 알림을 띄어주어요!
+            print('닉네임 중복입니다!');
+          }else if(result =='Email Duplicate'){
+            print('이메일 중복입니다!');
+          } else{
+            Navigator.of(context).pop();
+          }
         },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),

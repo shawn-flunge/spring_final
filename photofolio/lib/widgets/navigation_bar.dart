@@ -139,7 +139,7 @@ class NavigationBarState extends State<NavigationBar>{
             flex: 1,
             child: Container(
               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Text("logo"),
+              child:Text('PhotoFolioKR'),
             )
           ),
           NavigationItem(

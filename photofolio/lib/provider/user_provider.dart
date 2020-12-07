@@ -27,22 +27,21 @@ class UserLogin with ChangeNotifier {
     body:json.encode({'eMail':email,'password':pwd}),
     headers: {'Content-Type':'application/json'});
 
-    Map<String,dynamic> map;
-
-    
+    Map<String,dynamic> map; 
 
     if(res.body.isEmpty){
 
     }else{
       map=Map.castFrom(json.decode(res.body));
+      _me=User.fromJson(map);
+      
+
+      _isLogin = !_isLogin;
+      print(User.infoPrint(_me));
+      print("^^^^^^^^^^^^"+ getIsLogin().toString());
     }
 
-    _me=User.fromJson(map);
-    print(User.infoPrint(_me));
-
-    _email = email;
-    _pwd=pwd;
-    _isLogin = !_isLogin;
+    
     notifyListeners();
   }
   

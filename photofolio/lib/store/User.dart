@@ -14,7 +14,7 @@ class User{
     print('email '+user.eMail);
     print('password '+user.password);
     print('nick '+user.nickname);
-    print('infoText '+user.infoText);
+    //print('infoText '+user.infoText);
   }
   factory User.fromJson(Map<String,dynamic> json){
     return User(

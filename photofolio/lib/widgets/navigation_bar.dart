@@ -144,19 +144,34 @@ class NavigationBarState extends State<NavigationBar>{
             )
           ),
           NavigationItem(
-            title: "home",
+            title: "Home",
             routeName : routeHome,
             selected:index==0,
             onHighlight:onHighlight,
           ),
-          RaisedButton(
-            child:Text(login + userLogin.getIsLogin().toString()),
-            padding : const EdgeInsets.symmetric(horizontal: 40),
-            color: Colors.greenAccent,     
+          FlatButton(
+            child: Text('Get Started',
+              style: TextStyle(
+                fontSize: 18
+              ),
+            ),
+            padding : EdgeInsets.fromLTRB(40, 20, 40, 20),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30)
+            ),
+            color: Colors.grey[300],
             onPressed: (){
               showLoginDialog(navKey.currentContext,userLogin);
             },
           ),
+          // RaisedButton(
+          //   child:Text(login + userLogin.getIsLogin().toString()),
+          //   padding : const EdgeInsets.symmetric(horizontal: 40),
+          //   color: Colors.greenAccent,     
+          //   onPressed: (){
+          //     showLoginDialog(navKey.currentContext,userLogin);
+          //   },
+          // ),
 
       ];
 
@@ -170,7 +185,7 @@ class NavigationBarState extends State<NavigationBar>{
             )
           ),
           NavigationItem(
-            title: "home",
+            title: "Home",
             routeName : routeHome,
             selected:index==0,
             onHighlight:onHighlight,
@@ -181,14 +196,14 @@ class NavigationBarState extends State<NavigationBar>{
             selected:index==1,
             onHighlight:onHighlight,
           ),
-          RaisedButton(
-            child:Text(login + userLogin.getIsLogin().toString()),
-            padding : const EdgeInsets.symmetric(horizontal: 40),
-            color: Colors.greenAccent,     
-            onPressed: (){
-              showLoginDialog(navKey.currentContext,userLogin);
-            },
-          ),
+          // RaisedButton(
+          //   child:Text(login + userLogin.getIsLogin().toString()),
+          //   padding : const EdgeInsets.symmetric(horizontal: 40),
+          //   color: Colors.greenAccent,     
+          //   onPressed: (){
+          //     showLoginDialog(navKey.currentContext,userLogin);
+          //   },
+          // ),
 
       ];
 

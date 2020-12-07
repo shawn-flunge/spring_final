@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:photofolio/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class AboutPage extends StatefulWidget{
 
@@ -33,12 +35,18 @@ class AboutPageState extends State<AboutPage> {
 
   @override
   Widget build(BuildContext context) {
+    UserLogin userLogin = Provider.of<UserLogin>(context);
+    if(!userLogin.getIsLogin())
+    {
+      print('no login');
+    }
+
     //introduceController.text ="sgg";
     return Scaffold(
 
       body: ListView(
         children: [
-          userInfoSection(context),
+          userInfoSection(context,userLogin),
           const Divider(
             color: Colors.black38,
             height: 30,
@@ -56,7 +64,7 @@ class AboutPageState extends State<AboutPage> {
   }
 
 
-  Widget userInfoSection(BuildContext context) {
+  Widget userInfoSection(BuildContext context, UserLogin userLogin) {
     return Container(
       margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
       color: Colors.pink,
@@ -103,7 +111,7 @@ class AboutPageState extends State<AboutPage> {
                     Container(
                       color: Colors.pink,
                       child: Text(
-                        'flunge',
+                        userLogin.getNickName(),
                         style: TextStyle(fontSize: 40),
                       ),
                     ),

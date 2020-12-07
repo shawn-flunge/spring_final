@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:photofolio/store/User.dart';
 
+
 class UserLogin with ChangeNotifier {
 
   bool _isLogin =false;
@@ -19,7 +20,6 @@ class UserLogin with ChangeNotifier {
   String getInfoText()=>_infoText;
 
   User getMe()=>_me;
-  String test='';
   String baseUrl="http://localhost:8080/api";
 
   void login(String email, String pwd) async{
@@ -29,6 +29,7 @@ class UserLogin with ChangeNotifier {
 
     Map<String,dynamic> map;
 
+    
 
     if(res.body.isEmpty){
 

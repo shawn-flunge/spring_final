@@ -7,8 +7,9 @@ class User{
   String password;
   String nickname;
   String infoText;
+  var profileImage;
 
-  User({this.eMail,this.password,this.nickname,this.infoText});
+  User({this.eMail,this.password,this.nickname,this.infoText,this.profileImage});
 
   static infoPrint(User user){
     print('email '+user.eMail);
@@ -22,6 +23,7 @@ class User{
       password:json['password'],
       nickname:json['nickname'],
       infoText:json['infoText'],
+      profileImage:json['profileImage'],
     );
   }
   String toJson(){

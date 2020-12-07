@@ -1,10 +1,10 @@
-
-
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photofolio/store/User.dart';
+
+import 'package:http/http.dart' as http;
 
 class SignUpPage extends StatefulWidget{
 
@@ -121,7 +121,9 @@ class SignUpPageState extends State<SignUpPage>{
           //child: Text('text'),
           child: TextField(
             controller: idTextBoxController,
-            onChanged: (value) => {me.eMail=value},//userID = value,
+            onChanged: (value) => {
+                me.eMail=value,
+              },//userID = value,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
@@ -302,14 +304,20 @@ class SignUpPageState extends State<SignUpPage>{
 
 
   Widget buildSignUpBtn() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 25),
-      width: mediaQueryWidth*0.3,
-      child: RaisedButton(
+    var raisedButton = RaisedButton(
         elevation: 5,
-        onPressed: () {
-          Navigator.of(context).pop();
-          User.infoPrint(me);
+        onPressed: () async{
+          String result;
+          final res=await http.post('http://localhost:8080/api/signUp',body:me.toJson(),headers:{'Content-Type':'application/json'});
+          print(res.body);
+          result=res.body;
+          if(result == 'Nick Duplicate'){ // 중복 되었을 때 알림을 띄어주어요!
+            print('닉네임 중복입니다!');
+          }else if(result =='Email Duplicate'){
+            print('이메일 중복입니다!');
+          } else{
+            Navigator.of(context).pop();
+          }
         },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -322,7 +330,11 @@ class SignUpPageState extends State<SignUpPage>{
             fontWeight: FontWeight.bold
           )
         ),
-      ),
+      );
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25),
+      width: mediaQueryWidth*0.3,
+      child: raisedButton,
     );
   }
 

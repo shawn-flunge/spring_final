@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:flutter/rendering.dart';
+
 class User{
   String eMail;
   String password;
@@ -20,11 +24,13 @@ class User{
       infoText:json['infoText'],
     );
   }
-  Map<String,dynamic> toJson(){
+  String toJson(){
     final Map<String,dynamic> data=new Map<String,dynamic>();
     data['eMail']=this.eMail;
     data['password']=this.password;
-    data['nick']=this.nickname;
-    return data;
+    data['nickname']=this.nickname;
+    var jsonData=json.encode(data);
+    return jsonData;
   }
+  
 }

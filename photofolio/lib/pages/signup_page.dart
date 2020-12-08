@@ -6,16 +6,19 @@ import 'package:photofolio/store/User.dart';
 
 import 'package:http/http.dart' as http;
 
-class SignUpPage extends StatefulWidget{
+class SignUpPage extends StatefulWidget {
 
   SignUpPageState createState() => SignUpPageState();
 }
 
-class SignUpPageState extends State<SignUpPage>{
+class SignUpPageState extends State<SignUpPage> {
 
-  TextEditingController idTextBoxController;
-  TextEditingController pwTextBoxController;
-  TextEditingController pwCkTextBoxController;
+  final formKey = GlobalKey<FormState>();
+
+  TextEditingController emailTextBoxController = TextEditingController();
+  TextEditingController nickTextBoxController= TextEditingController();
+  TextEditingController pwdTextBoxController= TextEditingController();
+  TextEditingController pwdCkTextBoxController= TextEditingController();
 
   var mediaQueryWidth; 
   var mainPadding;
@@ -58,7 +61,10 @@ class SignUpPageState extends State<SignUpPage>{
         child: Row(
           //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            inputColumn(context),
+            Form(
+              key: formKey,
+              child: inputColumn(context),
+            ),
             buildImage(),
             //inputColumn(context)
             //buildId(context)
@@ -116,11 +122,16 @@ class SignUpPageState extends State<SignUpPage>{
                     color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
               ]
           ),
-          height: 50,
+          height: 60,
           width: mediaQueryWidth*0.4,
           //child: Text('text'),
-          child: TextField(
-            controller: idTextBoxController,
+          child: TextFormField(
+            validator: (value){
+              if(!value.contains('@'))
+                return "이메일 형식을 맞추세요";
+              return null;
+            },
+            controller: emailTextBoxController,
             onChanged: (value) => {
                 me.eMail=value,
               },//userID = value,
@@ -168,11 +179,11 @@ class SignUpPageState extends State<SignUpPage>{
                     color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
               ]
           ),
-          height: 50,
+          height: 60,
           width: mediaQueryWidth*0.4,
           //child: Text('text'),
           child: TextField(
-            controller: idTextBoxController,
+            controller: nickTextBoxController,
             onChanged: (value) => {me.nickname=value},//userID = value,
             keyboardType: TextInputType.text,
             style: TextStyle(color: Colors.black87),
@@ -215,10 +226,15 @@ class SignUpPageState extends State<SignUpPage>{
                 BoxShadow(
                     color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
               ]),
-          height: 50,
+          height: 60,
           width: mediaQueryWidth*0.4,
-          child: TextField(
-            controller: pwTextBoxController,
+          child: TextFormField(
+            validator: (value){
+              if(value.length<5)
+                return "4자리 이상입력하세요";
+              return null;
+            },
+            controller: pwdTextBoxController,
             onChanged: (value) =>  {me.password=value},//userPassword = value,
             obscureText: true,
             style: TextStyle(color: Colors.black87),
@@ -237,6 +253,8 @@ class SignUpPageState extends State<SignUpPage>{
       ],
     );
   }
+
+
 
   Widget buildPasswordCheck(BuildContext context) {
     return Column(
@@ -261,10 +279,15 @@ class SignUpPageState extends State<SignUpPage>{
                 BoxShadow(
                     color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
               ]),
-          height: 50,
+          height: 60,
           width: mediaQueryWidth*0.4,
-          child: TextField(
-            controller: pwTextBoxController,
+          child: TextFormField(
+            validator: (value){
+              if(value != pwdTextBoxController.text)
+                return "비밀번호 확인하세요";
+              return null;
+            },
+            controller: pwdCkTextBoxController,
             onChanged: (value) =>  {me.password=value},//userPassword = value,
             obscureText: true,
             style: TextStyle(color: Colors.black87),
@@ -307,17 +330,29 @@ class SignUpPageState extends State<SignUpPage>{
     var raisedButton = RaisedButton(
         elevation: 5,
         onPressed: () async{
-          String result;
-          final res=await http.post('http://localhost:8080/api/signUp',body:me.toJson(),headers:{'Content-Type':'application/json'});
-          print(res.body);
-          result=res.body;
-          if(result == 'Nick Duplicate'){ // 중복 되었을 때 알림을 띄어주어요!
-            print('닉네임 중복입니다!');
-          }else if(result =='Email Duplicate'){
-            print('이메일 중복입니다!');
-          } else{
-            Navigator.of(context).pop();
+          // if(formKey.currentState.validate())
+
+          if(formKey.currentState.validate() && (emailTextBoxController.text != "") && (nickTextBoxController.text != ""))
+          {
+            String result;
+            final res=await http.post('http://localhost:8080/api/signUp',body:me.toJson(),headers:{'Content-Type':'application/json'});
+            print(res.body);
+            result=res.body;
+            if(result == 'Nick Duplicate'){ // 중복 되었을 때 알림을 띄어주어요!
+              print('닉네임 중복입니다!');
+              showErrorDialog(context,'닉네임 중복입니다!');
+            }else if(result =='Email Duplicate'){
+              print('이메일 중복입니다!');
+              showErrorDialog(context,'이메일 중복입니다!');
+            } else{
+              Navigator.of(context).pop();
+            }
           }
+          else if(emailTextBoxController.text == "")
+            showErrorDialog(context, '이메일을 입력하세요');
+          else if(nickTextBoxController.text == "")
+            showErrorDialog(context, '닉네임을 입력하세요');
+          
         },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -339,5 +374,25 @@ class SignUpPageState extends State<SignUpPage>{
   }
 
 
+  showErrorDialog(BuildContext context,String str){
+    showDialog<void>(
+      context: context,
+      builder: (context){
+        return AlertDialog(
+          actions: [
+            RaisedButton(
+              child: Text('확인'),
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          content: Text(str),
+        );
+      }
+    );
+  }
+
 
 }
+

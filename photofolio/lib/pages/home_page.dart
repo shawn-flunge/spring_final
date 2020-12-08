@@ -17,13 +17,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     UserLogin userLogin = Provider.of<UserLogin>(context);
 
-    for(int i=0;i<10;i++){
-      widgets.add(
-        // Text(i.toString())
-        buildCard(i)
-        // buildCard2(i)
-      );
-    }
+    // for(int i=0;i<10;i++){
+    //   widgets.add(
+    //     // Text(i.toString())
+    //     buildCard(i)
+    //     // buildCard2(i)
+    //   );
+    // }
 
     if(MediaQuery.of(context).size.width>700)
       crossAxisCount =3;
@@ -38,63 +38,57 @@ class HomePage extends StatelessWidget {
             'Home Page',
             style: TextStyle(fontSize: 30),
           ),
-          
-            RaisedButton(
-              child: Text('asdsad'),
-              onPressed: () { showfff(context);}
-            ),
-            
-            RaisedButton(
-              child: Text('show login'),
-              onPressed: () { showLoginDialog(context);}
-            ),
-            RaisedButton(
-              child: Text('show Edit post'),
-              onPressed: () { showEditPostDialog(context);}
-            ),
-            RaisedButton(
-              child: Text('settings'),
-              onPressed: () { 
-                showSettingsDialog(context);
-              }
-            ),
+          RaisedButton(
+            child: Text('show login'),
+            onPressed: () { showLoginDialog(context);}
+          ),
+          RaisedButton(
+            child: Text('show Edit post'),
+            onPressed: () { showEditPostDialog(context);}
+          ),
+          RaisedButton(
+            child: Text('settings'),
+            onPressed: () { 
+              showSettingsDialog(context);
+            }
+          ),
 
-            RaisedButton(
-              child: Text('editing page'),
-              onPressed: () { 
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) { return SignUpPage();}));
-              }
-            ),
-            RaisedButton(
-              child: Text('show post'),
-              onPressed: () { 
-                showPostDialog(context);
-              }
-            ),
-            Container(
-              //margin: EdgeInsets.fromLTRB(200, 10, 200, 0),
-              //padding: EdgeInsets.all(100),
-              //color: Colors.pink[300],
-              width: 1000,
-              // height: double.infinity,
-              child: Center(
-                child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: crossAxisCount,
-                  padding: EdgeInsets.all(10),
+          RaisedButton(
+            child: Text('editing page'),
+            onPressed: () { 
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) { return SignUpPage();}));
+            }
+          ),
+          RaisedButton(
+            child: Text('show post'),
+            onPressed: () { 
+              showPostDialog(context);
+            }
+          ),
+          Container(
+            //margin: EdgeInsets.fromLTRB(200, 10, 200, 0),
+            //padding: EdgeInsets.all(100),
+            //color: Colors.pink[300],
+            width: 1000,
+            // height: double.infinity,
+            child: Center(
+              child: GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: crossAxisCount,
+                padding: EdgeInsets.all(10),
 
-                  children: List<Widget>.generate(20, (index) {
-                    return buildCard(index);
-                  })
-                ),
-              )
+                children: List<Widget>.generate(20, (index) {
+                  return buildCard(context,index);
+                })
+              ),
             )
+          )
         ],
       )
     );
   }
 
-  Widget buildCard(int i){
+  Widget buildCard(BuildContext context,int i){
 
     return InkWell(
 
@@ -121,7 +115,9 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      onTap: (){print('safsdf');},
+      onTap: (){
+        showPostDialog(context);
+      },
     );
 
   }
@@ -225,28 +221,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Future<void> showfff(BuildContext context){
-    showDialog<void>(
-      context: context,
-      builder: (context){
-        return AlertDialog(
-          actions: [
-            RaisedButton(
-              child: Text('확인'),
-              onPressed: (){
-
-              },
-            ),
-          ],
-          content: Column(
-            children: [
-              Text('사용중인 이메일입니다.'),           
-            ],
-          ),
-        );
-      }
-    );
-  }
 
 
   Future<void> showSettingsDialog(BuildContext context){

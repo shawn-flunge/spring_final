@@ -159,9 +159,17 @@ class LoginPageState extends State<LoginPage>{
       width: double.infinity,
       child: RaisedButton(
         elevation: 5,
-        onPressed: () {
-          userLogin.login(idTextBoxController.text.toString(), pwdTextBoxController.text.toString());
-          Navigator.of(context).pop();
+        onPressed: () async {
+          await userLogin.login(idTextBoxController.text.toString(), pwdTextBoxController.text.toString());
+
+          if(!userLogin.getIsLogin()){
+            print('@@@@@@@@@@@@@@@@@@failed@@@@@@@@@@@@@@@@@@@@@@@@@');
+            showErrorDialog(context,'이메일 혹은 비밀번호를 확인하세요');
+          }
+          else{
+            print(userLogin.getIsLogin().toString()+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+            Navigator.of(context).pop();
+          }
         },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -185,6 +193,25 @@ class LoginPageState extends State<LoginPage>{
         Navigator.of(context).pop();
         Navigator.of(context).push(MaterialPageRoute(builder: (context)=> SignUpPage()));
       },
+    );
+  }
+
+  showErrorDialog(BuildContext context,String str){
+    showDialog<void>(
+      context: context,
+      builder: (context){
+        return AlertDialog(
+          actions: [
+            RaisedButton(
+              child: Text('확인'),
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          content: Text(str),
+        );
+      }
     );
   }
 

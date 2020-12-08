@@ -164,8 +164,6 @@ class PostPageState extends State<PostPage>{
           onTap: () => launch('https://docs.flutter.io/flutter/services/UrlLauncher-class.html'),
         ),
         Padding(padding: EdgeInsets.all(50),)
-
-
       ],
     );
   }

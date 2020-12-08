@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_image_picker/flutter_web_image_picker.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:textfield_tags/textfield_tags.dart';
+import 'dart:io' as Io;
 
 
 class EditPage extends StatefulWidget{
@@ -68,7 +71,7 @@ class EditPageState extends State<EditPage>{
             child: RaisedButton(
               child: Text('submit'),
               onPressed: (){
-
+                // images[0].semanticLabel
               },
             ),
           )

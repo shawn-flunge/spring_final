@@ -1,11 +1,10 @@
-import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_web_image_picker/flutter_web_image_picker.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:textfield_tags/textfield_tags.dart';
-import 'dart:io' as Io;
+import 'package:image_picker_web_redux/image_picker_web_redux.dart';
+import 'package:photofolio/store/Post.dart';
 
 
 class EditPage extends StatefulWidget{
@@ -18,6 +17,14 @@ class EditPageState extends State<EditPage>{
   Image currentImage;
   Image thumbnailImage;
   
+  Post post=new Post();
+
+  Uint8List currentFile;
+  Uint8List thumNailFile;
+
+  List<Uint8List> files=new List<Uint8List>();
+  Map<String, Uint8List> filesMap=Map<String,Uint8List>();
+
   List<Image> images = List<Image>();
   Map<String, Image> imagesMap = Map<String, Image>(); //이미지라밸이 key
 
@@ -30,16 +37,14 @@ class EditPageState extends State<EditPage>{
   List<String> tags = List<String>();
 
   int i =0;
-  var thumbnail = "섬네일 설정";
+  var thumbnailText = "섬네일 설정";
 
   @override
   Widget build(BuildContext context) {
     
 
     return SingleChildScrollView(
-
       child:Column(
-
         children: [
           //buildImageRow(),
           Align(
@@ -69,8 +74,9 @@ class EditPageState extends State<EditPage>{
           ),
           Container(
             child: RaisedButton(
-              child: Text('submit'),
+              child: Text('등록하기'),
               onPressed: (){
+                print(post.thumbNail.toString());
                 // images[0].semanticLabel
               },
             ),
@@ -133,8 +139,6 @@ class EditPageState extends State<EditPage>{
         ],
       )
     );
-    
-    
   }
 
   Widget buildImageRow(){
@@ -150,9 +154,9 @@ class EditPageState extends State<EditPage>{
           child: Swiper(
             //containerWidth: 200,
             itemWidth: 500,
-            itemCount: images.length,
+            itemCount: post.postImages==null ? 0 : post.postImages.length,
                 itemBuilder: (context,count){
-                  return images[count];
+                  return new Image.memory(post.postImages[count]);
                 },
             //layout: SwiperLayout.STACK,
             pagination: new SwiperPagination(),
@@ -179,17 +183,24 @@ class EditPageState extends State<EditPage>{
           margin: EdgeInsets.fromLTRB(50, 0, 20, 0),
           child: Column(
             children: [
-              
               Container(
                 child: RaisedButton(
-                  child:Text(thumbnail),
+                  child:Text(thumbnailText),
                   onPressed: () async{
-                    final _image = await FlutterWebImagePicker.getImage;
+                    Uint8List imageFile = await ImagePickerWeb.getImage(outputType: ImageType.bytes);
+                    // final _image = await FlutterWebImagePicker.getImage;
                     //ms[_image.semanticLabel] = _image;
                     setState(() {
-                      //print(_image.toString());
-                      thumbnailImage = _image;
-                      thumbnail = _image.semanticLabel;          
+                      if(imageFile!=null){
+                          post.thumbNail=imageFile;
+                          print('성공!');
+                          //이미지 제목 추출은 힘들거 같아여
+                      }else{
+                        print('파일 오류입니다!');
+                        // 경고 메세지를 출력해주세요! :>
+                      }
+                      // thumbnailImage = _image;
+                      // thumbnail = _image.semanticLabel;
                     });
                   },
                 ),
@@ -198,13 +209,16 @@ class EditPageState extends State<EditPage>{
                 child: RaisedButton(
                   child:Text('이미지 선택'),
                   onPressed:  () async{
-                    final _image = await FlutterWebImagePicker.getImage;
+                    Uint8List imageFile = await ImagePickerWeb.getImage(outputType: ImageType.bytes);
+                    // final _image = await FlutterWebImagePicker.getImage;
                     //ms[_image.semanticLabel] = _image;
                     setState(() {
                       //print(_image.toString());
-                      currentImage = _image;
-                      images.add(_image);
-                      imagesMap[_image.semanticLabel] = _image;          
+                      if(imageFile != null){
+                        currentFile = imageFile;
+                        files.add(imageFile);
+                        post.postImages=files;
+                      }
                     });
                   },
                 ),

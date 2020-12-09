@@ -94,9 +94,6 @@ class AboutPageState extends State<AboutPage> {
                       children: ac,
                     ),
                   ),
-                  
-                  
-
                 ],
               ),
               

@@ -84,11 +84,22 @@ class SignUpPageState extends State<SignUpPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('logo'),
+          Padding(padding: EdgeInsets.symmetric(vertical: 20),),
+          Text('PHOTOFOLIO',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w400
+            ),
+          ),
+          Padding(padding: EdgeInsets.symmetric(vertical: 15),),
           buildEmail(context),
+          Padding(padding: EdgeInsets.symmetric(vertical: 15),),
           buildNick(context),
+          Padding(padding: EdgeInsets.symmetric(vertical: 15),),
           buildPassword(context),
+          Padding(padding: EdgeInsets.symmetric(vertical: 15),),
           buildPasswordCheck(context),
+          Padding(padding: EdgeInsets.symmetric(vertical: 8),),
           buildSignUpBtn()
         ],
       ),
@@ -318,7 +329,7 @@ class SignUpPageState extends State<SignUpPage> {
     // );
 
     return SizedBox(
-      width: mediaQueryWidth*0.2,
+      width: mediaQueryWidth*0.3,
       child: Image.asset('assets/signup_img.jpg'),
     );
 

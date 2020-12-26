@@ -38,7 +38,12 @@ class LoginPageState extends State<LoginPage>{
       child: Column(
         children: [
           
-          Text('logo'),
+          Text('PHOTOFOLIO',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w400
+            ),
+          ),
           SizedBox(height: 10,),
           buildId(context),
           SizedBox(height: 10,),
@@ -67,7 +72,7 @@ class LoginPageState extends State<LoginPage>{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          '아이디',
+          '이메일',
           style: TextStyle(
               color: Colors.blueGrey[300],
               fontSize: 13,

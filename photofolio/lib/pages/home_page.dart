@@ -1,10 +1,15 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:photofolio/pages/edit_page.dart';
 import 'package:photofolio/pages/post_page.dart';
 import 'package:photofolio/pages/signup_page.dart';
+import 'package:photofolio/provider/temp_provider.dart';
+import 'package:photofolio/store/post.dart';
 import 'package:provider/provider.dart';
 import '../provider/user_provider.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatelessWidget {
 
@@ -12,18 +17,27 @@ class HomePage extends StatelessWidget {
   List<Text> tt = List<Text>();
   List<Widget> widgets = List<Widget>();
   var crossAxisCount =0;
+  List<Post> posts = List<Post>();
+
+  String baseUrl="http://localhost:8080/api";
+
+  initPost() async{
+    final res = await http.post(baseUrl + "/",headers: {'Content-Type':'application/json'} );
+
+    if(res.body.isEmpty){
+      print('failed');
+    }else{
+      posts=List.castFrom(json.decode(res.body));
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
     UserLogin userLogin = Provider.of<UserLogin>(context);
+    initPost();
+    Temp temp = Provider.of<Temp>(context);
 
-    // for(int i=0;i<10;i++){
-    //   widgets.add(
-    //     // Text(i.toString())
-    //     buildCard(i)
-    //     // buildCard2(i)
-    //   );
-    // }
 
     if(MediaQuery.of(context).size.width>700)
       crossAxisCount =3;
@@ -38,60 +52,112 @@ class HomePage extends StatelessWidget {
             'Home Page',
             style: TextStyle(fontSize: 30),
           ),
-          RaisedButton(
-            child: Text('show login'),
-            onPressed: () { showLoginDialog(context);}
-          ),
-          RaisedButton(
-            child: Text('show Edit post'),
-            onPressed: () { showEditPostDialog(context);}
-          ),
-          RaisedButton(
-            child: Text('settings'),
-            onPressed: () { 
-              showSettingsDialog(context);
-            }
-          ),
 
-          RaisedButton(
-            child: Text('editing page'),
-            onPressed: () { 
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) { return SignUpPage();}));
-            }
-          ),
-          RaisedButton(
-            child: Text('show post'),
-            onPressed: () { 
-              showPostDialog(context);
-            }
-          ),
-          Container(
-            //margin: EdgeInsets.fromLTRB(200, 10, 200, 0),
-            //padding: EdgeInsets.all(100),
-            //color: Colors.pink[300],
-            width: 1000,
-            // height: double.infinity,
-            child: Center(
-              child: GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: crossAxisCount,
-                padding: EdgeInsets.all(10),
+          // RaisedButton(
+          //   child: Text('show Edit post'),
+          //   onPressed: () { showEditPostDialog(context);}
+          // ),
+          // RaisedButton(
+          //   child: Text('settings'),
+          //   onPressed: () { 
+          //     showSettingsDialog(context);
+          //   }
+          // ),
 
-                children: List<Widget>.generate(20, (index) {
-                  return buildCard(context,index);
-                })
-              ),
-            )
-          )
+          // RaisedButton(
+          //   child: Text('editing page'),
+          //   onPressed: () { 
+          //     Navigator.of(context).push(MaterialPageRoute(builder: (context) { return SignUpPage();}));
+          //   }
+          // ),
+          // RaisedButton(
+          //   child: Text('show post'),
+          //   onPressed: () { 
+          //     showPostDialog(context);
+          //   }
+          // ),
+          // Container(
+          //   //margin: EdgeInsets.fromLTRB(200, 10, 200, 0),
+          //   //padding: EdgeInsets.all(100),
+          //   //color: Colors.pink[300],
+          //   width: 1000,
+          //   // height: double.infinity,
+          //   child: Center(
+          //     child: GridView.count(
+          //       shrinkWrap: true,
+          //       crossAxisCount: crossAxisCount,
+          //       padding: EdgeInsets.all(10),
+
+          //       children: List<Widget>.generate(20, (index) {
+          //         return buildCard(context,index);
+          //       })
+          //     ),
+          //   )
+          // ),
+          if(temp.isUpload)
+            buildFake(context,temp),
+          buildCard(context,10)
         ],
       )
     );
   }
 
-  Widget buildCard(BuildContext context,int i){
+  Widget buildFake(BuildContext context, Temp temp){
+    return Container(
+      width: 1000,
+      // height: double.infinity,
+      child: Center(
+        child: GridView.count(
+          shrinkWrap: true,
+          crossAxisCount: crossAxisCount,
+          padding: EdgeInsets.all(10),
 
+          children: [
+            InkWell(
+
+              child: Card(
+                margin: EdgeInsets.all(20),      
+                elevation: 5,
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  children: <Widget>[
+                    ListTile(
+                      title: Text('안녕하세요'),
+                      subtitle: Text(
+                        'flunge',
+                        style: TextStyle(color: Colors.black38),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset('../assets/blue.png',fit: BoxFit.fill,),
+                    ),        
+                  ],
+                ),
+              ),
+              onTap: (){
+                showPostDialog(context);
+              },
+            )
+          ]
+        ),
+      )
+    );
+  }
+
+  Widget buildCard2(BuildContext context){
+
+    return ListView.builder(
+      itemCount: posts.length,
+      itemBuilder: (context, index){
+        return buildCard(context, index);
+      },
+    )
+
+  }
+
+  Widget buildCard(BuildContext context, int index){
     return InkWell(
-
       child: Card(
         margin: EdgeInsets.all(20),      
         elevation: 5,
@@ -99,7 +165,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: <Widget>[
             ListTile(
-              title: Text(i.toString()),
+              title: Text(posts[index].),
               subtitle: Text(
                 'subTitle',
                 style: TextStyle(color: Colors.black38),
@@ -179,7 +245,7 @@ class HomePage extends StatelessWidget {
   }
   
 
-  Future<void> showLoginDialog(BuildContext context){
+  Future<void> showSettingDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
       

@@ -1,17 +1,28 @@
+// import 'package:file_picker_web/file_picker_web.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_image_picker/flutter_web_image_picker.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:textfield_tags/textfield_tags.dart';
+import 'package:photofolio/provider/temp_provider.dart';
+import 'package:provider/provider.dart';
+// import 'package:universal_html/html.dart';
+// import 'package:universal_html/prefer_universal/html.dart';
 
 
 class EditPage extends StatefulWidget{
+  Temp temp;
+  EditPage({this.temp});
   @override
   EditPageState createState() => EditPageState();
 }
 
 
+
 class EditPageState extends State<EditPage>{
+  Temp temp2;
+  EditPageState({this.temp2});
+
+  
   Image currentImage;
   Image thumbnailImage;
   
@@ -21,8 +32,10 @@ class EditPageState extends State<EditPage>{
   List<String> comments = List<String>();
   Map<String,String> commentsMap = Map<String,String>(); //이미지라밸이 key
 
+  TextEditingController titleController = TextEditingController();
   TextEditingController commentController = TextEditingController(); 
-  TextEditingController explainController = TextEditingController(); 
+  TextEditingController explainController = TextEditingController();
+  TextEditingController linkController = TextEditingController(); 
 
   List<String> tags = List<String>();
 
@@ -31,7 +44,7 @@ class EditPageState extends State<EditPage>{
 
   @override
   Widget build(BuildContext context) {
-    
+    Temp temp = Provider.of<Temp>(context);
 
     return SingleChildScrollView(
 
@@ -54,6 +67,17 @@ class EditPageState extends State<EditPage>{
           //   child: buildTitle(),
           // ),
           Container(
+            margin: EdgeInsets.fromLTRB(30, 10, 30, 10),
+            child:TextField( 
+              controller: titleController,
+              maxLines: 1,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "제목",
+              ),
+            ),
+          ),
+          Container(
             // color: Colors.indigo,
             width: double.infinity,
             height: 500,
@@ -65,12 +89,8 @@ class EditPageState extends State<EditPage>{
             child: buildComment(),
           ),
           Container(
-            child: RaisedButton(
-              child: Text('submit'),
-              onPressed: (){
-
-              },
-            ),
+            padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
+            child: buildSubmitBtn(temp),
           )
           // Flexible(
           //   flex: 1,
@@ -141,7 +161,7 @@ class EditPageState extends State<EditPage>{
       children: [        
         Container(
           width: 400,
-          color: Colors.deepPurple,
+          //color: Colors.deepPurple,
           //padding: EdgeInsets.all(100),
           //margin: EdgeInsets.fromLTRB(10, 20, 20, 10),
           child: Swiper(
@@ -154,10 +174,10 @@ class EditPageState extends State<EditPage>{
             //layout: SwiperLayout.STACK,
             pagination: new SwiperPagination(),
             control: new SwiperControl(
-              color: Colors.pink,
+              color: Colors.blue,
               disableColor: Colors.green,
             ),
-            //loop: false,
+            loop: false,
             onTap: (int index){
               print("onTap : "+index.toString());
             },
@@ -171,12 +191,12 @@ class EditPageState extends State<EditPage>{
           ),
         ),
         Container(
-          color: Colors.teal,
+          //color: Colors.teal,
           width: 200,
           margin: EdgeInsets.fromLTRB(50, 0, 20, 0),
           child: Column(
             children: [
-              
+              Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 20),),
               Container(
                 child: RaisedButton(
                   child:Text(thumbnail),
@@ -191,12 +211,18 @@ class EditPageState extends State<EditPage>{
                   },
                 ),
               ),
+              Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 20),),
               Container(
                 child: RaisedButton(
                   child:Text('이미지 선택'),
                   onPressed:  () async{
                     final _image = await FlutterWebImagePicker.getImage;
-                    //ms[_image.semanticLabel] = _image;
+                    //File file = await FilePicker.getFile();
+                    //Image _image;
+                    //print(file.name+"llllllllllllllllllllllll"+file.type);
+                    
+                    
+                    // ms[_image.semanticLabel] = _image;
                     setState(() {
                       //print(_image.toString());
                       currentImage = _image;
@@ -206,14 +232,19 @@ class EditPageState extends State<EditPage>{
                   },
                 ),
               ),
+              Expanded(
+                flex: 1,
+                child: Divider(
+                  thickness: 5,
+                ),
+              ),
               TextField(
                 controller: commentController,
                 maxLines: 7,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "이미지에 대한 설명"
-                ),
-                
+                ),                
               ),
             ],
           ),
@@ -238,7 +269,7 @@ class EditPageState extends State<EditPage>{
         Container(
           width: 300,
           child: TextField( 
-          controller: explainController,
+          controller: linkController,
           maxLines: 1,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
@@ -251,6 +282,31 @@ class EditPageState extends State<EditPage>{
     );
   }
   
+  Widget buildSubmitBtn(Temp temp) {
+    //print(idTextBoxController.text.toString());
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5,
+        onPressed: () {
+          temp.upload();
+          Navigator.of(context).pop();
+        },
+        padding: EdgeInsets.all(15),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        // color: Colors.white,
+        color: Color(0xFF0275D8),
+        child: Text('작성',
+          style: TextStyle(
+            color: Color(0xFFAFD9FE),
+            fontSize: 18,
+            fontWeight: FontWeight.bold
+          )
+        ),
+      ),
+    );
+  }
 
 
 }

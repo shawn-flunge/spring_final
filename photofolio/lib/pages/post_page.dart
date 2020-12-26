@@ -20,10 +20,16 @@ class PostPageState extends State<PostPage>{
   Image img = Image.network('https://picsum.photos/250?image=9');
   Image img2 = Image.network('https://picsum.photos/250?image=9');
 
-  List<Image> imgs = [Image.network('https://picsum.photos/250?image=9',fit: BoxFit.scaleDown,),Image.network('https://picsum.photos/250?image=9',fit: BoxFit.fitWidth)];
+  // List<Image> imgs = [Image.network('https://picsum.photos/250?image=9',fit: BoxFit.scaleDown,),Image.network('https://picsum.photos/250?image=9',fit: BoxFit.fitWidth)];
+  List<Image> imgs = [Image.asset('../assets/pupple.png'),Image.asset('../assets/yellow.png'),Image.asset('../assets/red.png')];
+  List<String> strs = ['보라','노랑','빨강'];
+
 
   @override
   Widget build(BuildContext context) {
+
+    imgTextController.text = strs[0];
+
     return SingleChildScrollView(
 
       child: Column(
@@ -45,7 +51,7 @@ class PostPageState extends State<PostPage>{
             child: buildTitle(),
           ),
           Container(
-            color: Colors.indigo,
+            //color: Colors.indigo,
             width: double.infinity,
             height: 500,
             child: buildImageRow(),
@@ -69,7 +75,7 @@ class PostPageState extends State<PostPage>{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'flutter와 spring boot로 만드는spring 과제',
+          'flutter와 spring boot로 만드는spring photofolio',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 30
@@ -78,7 +84,7 @@ class PostPageState extends State<PostPage>{
         Container(
           child: Row(
             children: [
-              Icon(Icons.account_circle_outlined),
+              //Icon(Icons.account_circle_outlined),
               TextButton(
                 child: Text('flunge',
                   style: TextStyle(
@@ -108,7 +114,7 @@ class PostPageState extends State<PostPage>{
       children: [        
         Container(
           width: 400,
-          color: Colors.deepPurple,
+          //color: Colors.deepPurple,
           //padding: EdgeInsets.all(100),
           //margin: EdgeInsets.fromLTRB(10, 20, 20, 10),
           child: Swiper(
@@ -121,7 +127,7 @@ class PostPageState extends State<PostPage>{
             //layout: SwiperLayout.STACK,
             pagination: new SwiperPagination(),
             control: new SwiperControl(
-              color: Colors.pink,
+              color: Colors.blue,
               disableColor: Colors.green,
             ),
             //loop: false,
@@ -129,7 +135,7 @@ class PostPageState extends State<PostPage>{
               print("onTap : "+index.toString());
             },
             onIndexChanged: (index){
-             
+             imgTextController.text=strs[index];
             },
           ),
         ),
@@ -148,7 +154,7 @@ class PostPageState extends State<PostPage>{
   }
 
   Widget buildComment(){
-    commentController.text="DFgdfg";
+    commentController.text="디자인작업 끝나고 서비스 시작합니다!";
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,8 +166,8 @@ class PostPageState extends State<PostPage>{
           maxLines: 4,
         ),
         InkWell(
-          child: Text('dsf'),
-          onTap: () => launch('https://docs.flutter.io/flutter/services/UrlLauncher-class.html'),
+          child: Text('https://github.com/shawn-flunge'),
+          onTap: () => launch('https://github.com/shawn-flunge'),
         ),
         Padding(padding: EdgeInsets.all(50),)
 

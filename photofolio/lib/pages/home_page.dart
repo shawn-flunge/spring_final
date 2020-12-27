@@ -4,8 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:photofolio/pages/edit_page.dart';
 import 'package:photofolio/pages/post_page.dart';
-import 'package:photofolio/pages/signup_page.dart';
-import 'package:photofolio/provider/temp_provider.dart';
+
 import 'package:photofolio/store/post.dart';
 import 'package:provider/provider.dart';
 import '../provider/user_provider.dart';
@@ -17,7 +16,7 @@ class HomePage extends StatelessWidget {
   List<Text> tt = List<Text>();
   List<Widget> widgets = List<Widget>();
   var crossAxisCount =0;
-  List<Post> posts = List<Post>();
+  
 
   String baseUrl="http://localhost:8080/api";
 
@@ -27,7 +26,7 @@ class HomePage extends StatelessWidget {
     if(res.body.isEmpty){
       print('failed');
     }else{
-      posts=List.castFrom(json.decode(res.body));
+      // posts=List.castFrom(json.decode(res.body));
     }
 
   }
@@ -36,8 +35,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     UserLogin userLogin = Provider.of<UserLogin>(context);
     initPost();
-    Temp temp = Provider.of<Temp>(context);
-
 
     if(MediaQuery.of(context).size.width>700)
       crossAxisCount =3;
@@ -94,53 +91,8 @@ class HomePage extends StatelessWidget {
           //     ),
           //   )
           // ),
-          if(temp.isUpload)
-            buildFake(context,temp),
-          buildCard(context,10)
+          //buildCard(context,10)
         ],
-      )
-    );
-  }
-
-  Widget buildFake(BuildContext context, Temp temp){
-    return Container(
-      width: 1000,
-      // height: double.infinity,
-      child: Center(
-        child: GridView.count(
-          shrinkWrap: true,
-          crossAxisCount: crossAxisCount,
-          padding: EdgeInsets.all(10),
-
-          children: [
-            InkWell(
-
-              child: Card(
-                margin: EdgeInsets.all(20),      
-                elevation: 5,
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: <Widget>[
-                    ListTile(
-                      title: Text('안녕하세요'),
-                      subtitle: Text(
-                        'flunge',
-                        style: TextStyle(color: Colors.black38),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Image.asset('../assets/blue.png',fit: BoxFit.fill,),
-                    ),        
-                  ],
-                ),
-              ),
-              onTap: (){
-                showPostDialog(context);
-              },
-            )
-          ]
-        ),
       )
     );
   }
@@ -148,11 +100,11 @@ class HomePage extends StatelessWidget {
   Widget buildCard2(BuildContext context){
 
     return ListView.builder(
-      itemCount: posts.length,
+      itemCount: 3,
       itemBuilder: (context, index){
         return buildCard(context, index);
       },
-    )
+    );
 
   }
 
@@ -165,9 +117,10 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: <Widget>[
             ListTile(
-              title: Text(posts[index].),
+              //title: Text(posts[index].title),
+              title: Text('fsd'),
               subtitle: Text(
-                'subTitle',
+                'fsadfaf',
                 style: TextStyle(color: Colors.black38),
               ),
             ),
@@ -175,6 +128,7 @@ class HomePage extends StatelessWidget {
               flex: 1,
               child: Image(
                 image: Image.network('https://picsum.photos/250?image=9',fit: BoxFit.fill,).image,
+                //image: posts[index].thumbNail.image,
                 width: double.maxFinite,         
               ),
             ),        

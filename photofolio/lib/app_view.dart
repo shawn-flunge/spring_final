@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:photofolio/provider/temp_provider.dart';
 import 'package:photofolio/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +16,6 @@ class AppView extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserLogin>(create:(context)=> UserLogin()),
-        ChangeNotifierProvider<Temp>(create:(context)=> Temp()),
       ],
       child: Scaffold(
         backgroundColor: Colors.white,

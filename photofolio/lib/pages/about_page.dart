@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:photofolio/pages/edit_page.dart';
 import 'package:photofolio/pages/post_page.dart';
 import 'package:photofolio/pages/setting_page.dart';
-import 'package:photofolio/provider/temp_provider.dart';
 import 'package:photofolio/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -48,14 +47,13 @@ class AboutPageState extends State<AboutPage> {
     else{
 
     }
-    Temp temp = Provider.of<Temp>(context);
 
     //introduceController.text ="sgg";
     return Scaffold(
 
       body: ListView(
         children: [
-          userInfoSection(context,userLogin,temp),
+          userInfoSection(context,userLogin),
           const Divider(
             color: Colors.black38,
             height: 30,
@@ -64,12 +62,12 @@ class AboutPageState extends State<AboutPage> {
             endIndent: 200,
           ),
           
-          Container(
-            margin: EdgeInsets.fromLTRB(400, 100, 400, 100),
-            child: SingleChildScrollView(
-              child: buildFake(context,temp),
-            ),
-          )
+          // Container(
+          //   margin: EdgeInsets.fromLTRB(400, 100, 400, 100),
+          //   child: SingleChildScrollView(
+          //     child: buildFake(context,temp),
+          //   ),
+          // )
           
         ],
       )
@@ -80,7 +78,7 @@ class AboutPageState extends State<AboutPage> {
   }
 
 
-  Widget userInfoSection(BuildContext context, UserLogin userLogin,Temp temp) {
+  Widget userInfoSection(BuildContext context, UserLogin userLogin) {
     return Container(
       margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
       color: Colors.grey[100],
@@ -100,7 +98,7 @@ class AboutPageState extends State<AboutPage> {
                     width: 150,
                     height: 150,
                     child: CircleAvatar(  //NetworkImage('https://picsum.photos/250?image=9')
-                      backgroundImage: temp.isProfile == false ? Image.asset('../assets/none.png').image : Image.asset('../assets/lee.png').image,
+                      // backgroundImage: temp.isProfile == false ? Image.asset('../assets/none.png').image : Image.asset('../assets/lee.png').image,
                       backgroundColor: Color(0xFFFFFFFF),
                     ),
                   ),
@@ -152,8 +150,9 @@ class AboutPageState extends State<AboutPage> {
                     Container(
                       //color: Colors.pink,
                       child: Text(
+                        'temp'
                         // userLogin.getMe().infoText ==null ?"" : userLogin.getMe().infoText,
-                        temp.isIntro == false ? "" : "안녕하세요"
+                        // temp.isIntro == false ? "" : "안녕하세요"
                       ),
                     )                           
                   ],
@@ -226,55 +225,6 @@ class AboutPageState extends State<AboutPage> {
     // ),
   );
 
-
-  Widget buildFake(BuildContext context, Temp temp){
-
-    if(temp.isUpload ==false)
-      return Container(
-        child: Text(" "),
-      );
-    else
-    return Container(
-      width: 1000,
-      // height: double.infinity,
-      child: Center(
-        child: GridView.count(
-          shrinkWrap: true,
-          crossAxisCount: 1,
-          padding: EdgeInsets.all(10),
-
-          children: [
-            InkWell(
-
-              child: Card(
-                margin: EdgeInsets.all(20),      
-                elevation: 5,
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: <Widget>[
-                    ListTile(
-                      title: Text('flutter와 spring으로 만드는 photofolio'),
-                      subtitle: Text(
-                        'flunge',
-                        style: TextStyle(color: Colors.black38),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Image.asset('../assets/blue.png',fit: BoxFit.fill,),
-                    ),        
-                  ],
-                ),
-              ),
-              onTap: (){
-                showPostDialog(context);
-              },
-            )
-          ]
-        ),
-      )
-    );
-  }
 
 
   Future<void> showEditPostDialog(BuildContext context){

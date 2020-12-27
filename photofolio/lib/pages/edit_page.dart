@@ -1,17 +1,18 @@
 // import 'package:file_picker_web/file_picker_web.dart';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_image_picker/flutter_web_image_picker.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:photofolio/provider/temp_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 // import 'package:universal_html/html.dart';
 // import 'package:universal_html/prefer_universal/html.dart';
 
 
 class EditPage extends StatefulWidget{
-  Temp temp;
-  EditPage({this.temp});
   @override
   EditPageState createState() => EditPageState();
 }
@@ -19,9 +20,6 @@ class EditPage extends StatefulWidget{
 
 
 class EditPageState extends State<EditPage>{
-  Temp temp2;
-  EditPageState({this.temp2});
-
   
   Image currentImage;
   Image thumbnailImage;
@@ -29,8 +27,11 @@ class EditPageState extends State<EditPage>{
   List<Image> images = List<Image>();
   Map<String, Image> imagesMap = Map<String, Image>(); //이미지라밸이 key
 
+  List<PlatformFile> files = List<PlatformFile>();
+
   List<String> comments = List<String>();
   Map<String,String> commentsMap = Map<String,String>(); //이미지라밸이 key
+
 
   TextEditingController titleController = TextEditingController();
   TextEditingController commentController = TextEditingController(); 
@@ -40,11 +41,10 @@ class EditPageState extends State<EditPage>{
   List<String> tags = List<String>();
 
   int i =0;
-  var thumbnail = "섬네일 설정";
+  String thumbnail = "섬네일 설정";
 
   @override
   Widget build(BuildContext context) {
-    Temp temp = Provider.of<Temp>(context);
 
     return SingleChildScrollView(
 
@@ -90,7 +90,7 @@ class EditPageState extends State<EditPage>{
           ),
           Container(
             padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
-            child: buildSubmitBtn(temp),
+            child: buildSubmitBtn(),
           )
           // Flexible(
           //   flex: 1,
@@ -181,11 +181,9 @@ class EditPageState extends State<EditPage>{
             onTap: (int index){
               print("onTap : "+index.toString());
             },
-            onIndexChanged: (index){
-              currentImage = images[i];
-              commentsMap[currentImage.semanticLabel] = commentController.text;
+            onIndexChanged: (index){      
               commentController.clear();
-              commentController.text = commentsMap[images[index].semanticLabel];
+              commentController.text= commentsMap[files[index].name];
               i=index;
             },
           ),
@@ -216,19 +214,50 @@ class EditPageState extends State<EditPage>{
                 child: RaisedButton(
                   child:Text('이미지 선택'),
                   onPressed:  () async{
-                    final _image = await FlutterWebImagePicker.getImage;
-                    //File file = await FilePicker.getFile();
-                    //Image _image;
-                    //print(file.name+"llllllllllllllllllllllll"+file.type);
-                    
+                    FilePickerResult result = await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['jpg','png','jpeg' ],
+                    );
+
+                    if(result != null) {
+                      PlatformFile file = result.files.first;
+                      
+
+                      if(file.extension == 'jpg' || file.extension == 'png' || file.extension == 'jpeg' )
+                      {
+                        print(file.name);
+                        // print(file.bytes);
+                        print(file.size);
+                        print(file.extension);
+                        //print(file.path);
+                        
+                        
+                        //ms[_image.semanticLabel] = _image;
+                        setState(() {
+                          files.add(file);
+                          var img = Image(image: MemoryImage(file.bytes),);
+                          // //print(img.toString() +'/////'+currentImage.semanticLabel);
+                          images.add(img);
+                          imagesMap[file.name] = img;
+                                    
+                        });
+                      }
+                      else{
+                        print('file is not img');
+                      }
+                      
+                    } else {
+                      // User canceled the picker
+                      print('result is null');
+                    }
                     
                     // ms[_image.semanticLabel] = _image;
-                    setState(() {
-                      //print(_image.toString());
-                      currentImage = _image;
-                      images.add(_image);
-                      imagesMap[_image.semanticLabel] = _image;          
-                    });
+                    // setState(() {
+                    //   //print(_image.toString());
+                    //   currentImage = _image;
+                    //   images.add(_image);
+                    //   imagesMap[_image.semanticLabel] = _image;          
+                    // });
                   },
                 ),
               ),
@@ -244,7 +273,10 @@ class EditPageState extends State<EditPage>{
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "이미지에 대한 설명"
-                ),                
+                ),
+                onChanged: (value) {
+                  commentsMap[files[i].name] = value;
+                },                
               ),
             ],
           ),
@@ -282,7 +314,7 @@ class EditPageState extends State<EditPage>{
     );
   }
   
-  Widget buildSubmitBtn(Temp temp) {
+  Widget buildSubmitBtn() {
     //print(idTextBoxController.text.toString());
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25),
@@ -290,7 +322,6 @@ class EditPageState extends State<EditPage>{
       child: RaisedButton(
         elevation: 5,
         onPressed: () {
-          temp.upload();
           Navigator.of(context).pop();
         },
         padding: EdgeInsets.all(15),

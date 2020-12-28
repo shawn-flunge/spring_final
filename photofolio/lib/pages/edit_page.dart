@@ -5,12 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_image_picker/flutter_web_image_picker.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:photofolio/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-// import 'package:universal_html/html.dart';
-// import 'package:universal_html/prefer_universal/html.dart';
-
+import 'package:http_parser/http_parser.dart';
 
 class EditPage extends StatefulWidget{
   @override
@@ -28,10 +27,12 @@ class EditPageState extends State<EditPage>{
   Map<String, Image> imagesMap = Map<String, Image>(); //이미지라밸이 key
 
   List<PlatformFile> files = List<PlatformFile>();
+  PlatformFile thumbnailFile;
 
+  // List<String> comments = List<String>();
   List<String> comments = List<String>();
   Map<String,String> commentsMap = Map<String,String>(); //이미지라밸이 key
-
+  
 
   TextEditingController titleController = TextEditingController();
   TextEditingController commentController = TextEditingController(); 
@@ -45,7 +46,7 @@ class EditPageState extends State<EditPage>{
 
   @override
   Widget build(BuildContext context) {
-
+    UserLogin userLogin = Provider.of<UserLogin>(context);
     return SingleChildScrollView(
 
       child:Column(
@@ -90,7 +91,7 @@ class EditPageState extends State<EditPage>{
           ),
           Container(
             padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
-            child: buildSubmitBtn(),
+            child: buildSubmitBtn(userLogin),
           )
           // Flexible(
           //   flex: 1,
@@ -181,7 +182,7 @@ class EditPageState extends State<EditPage>{
             onTap: (int index){
               print("onTap : "+index.toString());
             },
-            onIndexChanged: (index){      
+            onIndexChanged: (index){
               commentController.clear();
               commentController.text= commentsMap[files[index].name];
               i=index;
@@ -199,13 +200,37 @@ class EditPageState extends State<EditPage>{
                 child: RaisedButton(
                   child:Text(thumbnail),
                   onPressed: () async{
-                    final _image = await FlutterWebImagePicker.getImage;
-                    //ms[_image.semanticLabel] = _image;
-                    setState(() {
-                      //print(_image.toString());
-                      thumbnailImage = _image;
-                      thumbnail = _image.semanticLabel;          
-                    });
+
+                    FilePickerResult result = await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['jpg','png','jpeg' ],
+                    );
+                    if(result != null) {
+                      thumbnailFile = result.files.first;
+                      if(thumbnailFile.extension == 'jpg' || thumbnailFile.extension == 'png' || thumbnailFile.extension == 'jpeg' )
+                      {
+                        print(thumbnailFile.name);
+                        print(thumbnailFile.size);
+                        print(thumbnailFile.extension);
+                        setState(() {
+                          thumbnail = thumbnailFile.name;                              
+                        });
+                      }
+                      else{
+                        print('file is not img');
+                      }
+                      
+                    } else {
+                      // User canceled the picker
+                      print('result is null');
+                    }
+                    // final _image = await FlutterWebImagePicker.getImage;
+                    // //ms[_image.semanticLabel] = _image;
+                    // setState(() {
+                    //   //print(_image.toString());
+                    //   thumbnailImage = _image;
+                    //   thumbnail = _image.semanticLabel;          
+                    // });
                   },
                 ),
               ),
@@ -236,7 +261,7 @@ class EditPageState extends State<EditPage>{
                         setState(() {
                           files.add(file);
                           var img = Image(image: MemoryImage(file.bytes),);
-                          // //print(img.toString() +'/////'+currentImage.semanticLabel);
+
                           images.add(img);
                           imagesMap[file.name] = img;
                                     
@@ -251,13 +276,6 @@ class EditPageState extends State<EditPage>{
                       print('result is null');
                     }
                     
-                    // ms[_image.semanticLabel] = _image;
-                    // setState(() {
-                    //   //print(_image.toString());
-                    //   currentImage = _image;
-                    //   images.add(_image);
-                    //   imagesMap[_image.semanticLabel] = _image;          
-                    // });
                   },
                 ),
               ),
@@ -314,7 +332,7 @@ class EditPageState extends State<EditPage>{
     );
   }
   
-  Widget buildSubmitBtn() {
+  Widget buildSubmitBtn(UserLogin userLogin) {
     //print(idTextBoxController.text.toString());
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25),
@@ -322,6 +340,7 @@ class EditPageState extends State<EditPage>{
       child: RaisedButton(
         elevation: 5,
         onPressed: () {
+          posting(userLogin);
           Navigator.of(context).pop();
         },
         padding: EdgeInsets.all(15),
@@ -335,8 +354,60 @@ class EditPageState extends State<EditPage>{
             fontWeight: FontWeight.bold
           )
         ),
+        
       ),
     );
+  }
+
+
+
+  posting(UserLogin userLogin) async{
+    List<MultipartFile> imageList = List<MultipartFile>();
+    List<String> comments1 = List<String>();
+    //List<String> imageExplain = List<String>();
+    String uri = "http://localhost:8080/api/posting";
+
+    for(var imgs in files){
+      List<int> imageData = imgs.bytes;
+
+      MultipartFile multipartFile = MultipartFile.fromBytes(
+        imageData,
+        filename: imgs.name,
+        contentType: MediaType('image',imgs.extension)
+      );
+      imageList.add(multipartFile);
+      //imageList[multipartFile] = commentsMap[imgs.name];
+    }
+    print("Number of pictures:${imageList.length}");
+
+    commentsMap.forEach((key, value) {
+      print(key+ ":" + value);
+      comments1.add(value);
+    });
+
+    FormData formData = FormData.fromMap({
+      'title' : titleController.text,
+      'writer' :  userLogin.getNickName(),
+      'multipartFiles' : imageList,
+      'comments' : comments1,
+      'explanation' : explainController.text,
+      'link' : linkController.text
+    });
+
+    Dio dio = Dio();
+    var response = await dio.post(uri, data: formData,); //options: Options(contentType:  Headers.formUrlEncodedContentType)
+
+    print(response.data.toString());
+    print(response.statusCode.toString());
+    print(response.headers.toString());
+    // if(response.statusCode == 200){
+    //   print('success');
+    // }
+    // else{
+    //   print('fail');
+    // }
+
+    
   }
 
 

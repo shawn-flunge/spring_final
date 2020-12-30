@@ -47,6 +47,7 @@ class EditPageState extends State<EditPage>{
   @override
   Widget build(BuildContext context) {
     UserLogin userLogin = Provider.of<UserLogin>(context);
+    print(userLogin.getNickName());
     return SingleChildScrollView(
 
       child:Column(
@@ -340,7 +341,7 @@ class EditPageState extends State<EditPage>{
       child: RaisedButton(
         elevation: 5,
         onPressed: () {
-          posting(userLogin);
+          posting(userLogin.getMe().nickname);
           Navigator.of(context).pop();
         },
         padding: EdgeInsets.all(15),
@@ -361,12 +362,14 @@ class EditPageState extends State<EditPage>{
 
 
 
-  posting(UserLogin userLogin) async{
+  posting(String nickname) async{
     List<MultipartFile> imageList = List<MultipartFile>();
-    List<String> comments1 = List<String>();
+    List<String> comments = List<String>();
     //List<String> imageExplain = List<String>();
     String uri = "http://localhost:8080/api/posting";
 
+    print(nickname+">>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    //사용자가 선택한 파일들을 byte로 바꿔서 MultipartFile형식으로 변환
     for(var imgs in files){
       List<int> imageData = imgs.bytes;
 
@@ -379,20 +382,24 @@ class EditPageState extends State<EditPage>{
       //imageList[multipartFile] = commentsMap[imgs.name];
     }
     print("Number of pictures:${imageList.length}");
-
+    
+    //사용자가 작성한 이미지에 대한 설명을 list에 옮김
     commentsMap.forEach((key, value) {
       print(key+ ":" + value);
-      comments1.add(value);
+      comments.add(value);
     });
-
+    
+   
     FormData formData = FormData.fromMap({
       'title' : titleController.text,
-      'writer' :  userLogin.getNickName(),
+      'writer' :  nickname,
       'multipartFiles' : imageList,
-      'comments' : comments1,
+      'comments' : comments,
       'explanation' : explainController.text,
       'link' : linkController.text
     });
+
+    print(formData.fields.toString());
 
     Dio dio = Dio();
     var response = await dio.post(uri, data: formData,); //options: Options(contentType:  Headers.formUrlEncodedContentType)
@@ -400,13 +407,8 @@ class EditPageState extends State<EditPage>{
     print(response.data.toString());
     print(response.statusCode.toString());
     print(response.headers.toString());
-    // if(response.statusCode == 200){
-    //   print('success');
-    // }
-    // else{
-    //   print('fail');
-    // }
-
+    
+    
     
   }
 

@@ -22,7 +22,7 @@ class UserLogin with ChangeNotifier {
   String getVistedUser() => _visitedUser;
 
   User getMe()=>_me;
-  String baseUrl="http://localhost:8080/api";
+  String baseUrl="https://rest-api-server-axfra.run.goorm.io/api";
 
   void login(String email, String pwd) async{
     final res=await http.post(baseUrl+"/login",

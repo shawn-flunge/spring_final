@@ -366,7 +366,7 @@ class EditPageState extends State<EditPage>{
     List<MultipartFile> imageList = List<MultipartFile>();
     List<String> comments = List<String>();
     //List<String> imageExplain = List<String>();
-    String uri = "http://localhost:8080/api/posting";
+    String uri = "https://rest-api-server-axfra.run.goorm.io/api/posting";
 
     print(nickname+">>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     //사용자가 선택한 파일들을 byte로 바꿔서 MultipartFile형식으로 변환

@@ -28,13 +28,12 @@ class HomePageState extends State<HomePage> {
   
   Image img = Image.network('https://picsum.photos/250?image=9');
 
-  String baseUrl="http://localhost:8080/api/home";
+  String baseUrl="https://rest-api-server-axfra.run.goorm.io/api/home";
   
 
   //Future<List<dynamic>> posts;
 
-  Future<List<dynamic>> fetchPost() async{
-    List<Post> ppap = List<Post>();
+  Future<List<Post>> fetchPost() async{
 
     FormData formData = FormData.fromMap({
       'search' : 'home'
@@ -59,7 +58,8 @@ class HomePageState extends State<HomePage> {
           postLink: value['link']
         ));
       });
-      print(posts[0].postTitle);
+      print(posts[0].postThumbNail);
+      return posts;
     }
   }
 
@@ -153,7 +153,7 @@ class HomePageState extends State<HomePage> {
       shrinkWrap: true,
       itemCount: posts.length,
       itemBuilder: (context, index) {
-        
+        return buildCard(context, posts[index]);
       },
     );    
   }
@@ -163,7 +163,7 @@ class HomePageState extends State<HomePage> {
   
 
 
-  Widget buildCard(BuildContext context, int index){
+  Widget buildCard(BuildContext context, Post post){
     return InkWell(
       child: Card(
         margin: EdgeInsets.all(20),      
@@ -172,18 +172,19 @@ class HomePageState extends State<HomePage> {
         child: Column(
           children: <Widget>[
             ListTile(
-              //title: Text(posts[index].title),
-              title: Text('fsd'),
+              title: Text(post.postTitle),
+              //title: Text('fsd'),
               subtitle: Text(
-                //posts[index].nickname,
-                'dad',
+                post.userNickname,
+                //'dad',
                 style: TextStyle(color: Colors.black38),
               ),
             ),
             Expanded(
               flex: 1,
               child: Image(
-                image: Image.network('https://picsum.photos/250?image=9',fit: BoxFit.fill,).image,
+                // image: Image.network('https://picsum.photos/250?image=9',fit: BoxFit.fill,).image,
+                image: Image.network('https://rest-api-server-axfra.run.goorm.io'+post.postThumbNail,fit: BoxFit.fill,).image,
                 //image: posts[index].thumbNail.image,
                 width: double.maxFinite,         
               ),
@@ -197,14 +198,6 @@ class HomePageState extends State<HomePage> {
     );
 
   }
-
-
-
-
-
-  
-  
-
 
   Future<void> showPostDialog(BuildContext context){
     return showGeneralDialog(
@@ -232,93 +225,8 @@ class HomePageState extends State<HomePage> {
   }
   
 
-  Future<void> showSettingDialog(BuildContext context){
-    return showGeneralDialog(
-      context: context,
-      
-      barrierColor: Colors.blue.withAlpha(70),
-      transitionDuration: new Duration(milliseconds: 400),
-      //barrierDismissible: false,
-      pageBuilder: (BuildContext con, Animation ani, Animation secAni){
-        return AlertDialog(
-          elevation: 10,
-          //backgroundColor: Colors.yellow,
-         // contentPadding: EdgeInsets.zero,
-          // content: Container(
-          //   width: MediaQuery.of(context).size.width*0.4,
-          //   child: LoginPage(),
-          // )
-          content: Container(
-            width: MediaQuery.of(context).size.width*0.3,
-            child: SingleChildScrollView(
-            padding: EdgeInsets.zero,
-            //width: MediaQuery.of(context).size.width*0.4,
-            child: Column(
-              children: [
-                Align(
-                  child: IconButton(
-                      iconSize: 20,
-                      icon: Icon(Icons.cancel_outlined,),
-                      onPressed: () => Navigator.of(context).pop(),
-                  ), 
-                  alignment: FractionalOffset(1, 0),
-                ),
-                //LoginPage(u)
-              ],
-            ),
-          ),
-          )
-        );
-      }
+  
 
-    );
-  }
-
-
-
-  Future<void> showSettingsDialog(BuildContext context){
-    return showGeneralDialog(
-      context: context,
-      
-      barrierColor: Colors.blue.withAlpha(70),
-      transitionDuration: new Duration(milliseconds: 400),
-      //barrierDismissible: false,
-      pageBuilder: (BuildContext con, Animation ani, Animation secAni){
-        return AlertDialog(
-          elevation: 10,
-          content: Container(
-            width: double.infinity,
-            child: SingleChildScrollView(
-            //padding: EdgeInsets.zero,
-            //width: MediaQuery.of(context).size.width*0.4,
-            child: Column(
-              children: [
-                Align(
-                  child: IconButton(
-                      iconSize: 20,
-                      icon: Icon(Icons.cancel_outlined,),
-                      onPressed: () => Navigator.of(context).pop(),
-                  ), 
-                  alignment: FractionalOffset(1, 0),
-                ),
-                FlatButton(
-                  child: Text("agagsggs"),
-                  onPressed: (){print("ff");},
-                ),
-                RaisedButton(
-                  child: Text('agsg'),
-                  onPressed: (){print("agsg");},
-                )
-                
-              ],
-            ),
-          ),
-          )
-        );
-      }
-
-    );
-  }
   
 
 }

@@ -346,7 +346,7 @@ class SignUpPageState extends State<SignUpPage> {
           if(formKey.currentState.validate() && (emailTextBoxController.text != "") && (nickTextBoxController.text != ""))
           {
             String result;
-            final res=await http.post('http://localhost:8080/api/signUp',body:me.toJson(),headers:{'Content-Type':'application/json'});
+            final res=await http.post('https://rest-api-server-axfra.run.goorm.io/api/signUp',body:me.toJson(),headers:{'Content-Type':'application/json'});
             print(res.body);
             result=res.body;
             if(result == 'Nick Duplicate'){ // 중복 되었을 때 알림을 띄어주어요!

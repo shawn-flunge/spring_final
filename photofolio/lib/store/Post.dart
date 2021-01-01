@@ -1,30 +1,48 @@
-import 'dart:typed_data';
+
+
 import 'dart:convert';
 
-class Post{
-  Uint8List thumbNail;
-  String title;
-  String content;
-  List<Uint8List> postImages;
+import 'package:flutter/cupertino.dart';
 
-  Post({this.title,this.content,this.thumbNail,this.postImages});
+class Post{
+
+  int id;
+  String postTitle;
+  String userNickname;
+  String postExplain;
+  String postLink;
+  String postThumbNail;
+  
+  Post({this.id, this.postTitle, this.userNickname, this.postThumbNail, this.postExplain, this.postLink});
+
+  // List<Post> fromJson(Map<String,dynamic> json){
+  //   List<Post> posts;
+  //   json.forEach((key, value) {
+  //     Post post = Post(id: value["id"],
+  //       postTitle: value['title'],
+  //       userNickname : value['nickname'],
+  //       postThumbNail : value['thumbnail'],
+  //       postExplain : value['explanation'],
+  //       postLink : value['postLink']
+  //     );
+  //     posts.add(post);
+  //   });
+  //   return posts;
+  // }
 
   factory Post.fromJson(Map<String,dynamic> json){
     return Post(
-      title:json['title'],
-      content:json['password'],
-      thumbNail:json['thumbNail'],
-      postImages:json['postImages'],
-    );
+      id: json['id'],
+      postTitle: json['title'] as String,
+      userNickname: json['nickname'] as String,
+      postThumbNail: json['thumbnail'] as String,
+      postExplain: json['explanation'] as String,
+      postLink: json['link'] as String,
+    );   
   }
 
-  String toJson(){
-    final Map<String,dynamic> data=new Map<String,dynamic>();
-    data['title']=this.title;
-    data['content']=this.content;
-    data['thumbNail']=this.thumbNail;
-    data['postImages']=this.postImages;
-    var jsonData=json.encode(data);
-    return jsonData;
-  }
+  
+ 
+
+
 }

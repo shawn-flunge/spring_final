@@ -12,15 +12,17 @@ class UserLogin with ChangeNotifier {
   String _pwd="";
   String _nickname=""; // 이름으로 쓰일거에요!
   String _infoText=""; // 간략하게 자신을 소개 하는 글을 작성해요!
+  String _visitedUser="";
 
   bool getIsLogin() => _isLogin;
   String getEmail() => _email;
   String getPw() => _pwd;
   String getNickName()=>_nickname;
   String getInfoText()=>_infoText;
+  String getVistedUser() => _visitedUser;
 
   User getMe()=>_me;
-  String baseUrl="http://localhost:8080/api";
+  String baseUrl="https://rest-api-server-axfra.run.goorm.io/api";
 
   void login(String email, String pwd) async{
     final res=await http.post(baseUrl+"/login",
@@ -43,6 +45,10 @@ class UserLogin with ChangeNotifier {
 
     
     notifyListeners();
+  }
+
+  void visit(String str){
+    
   }
   
 

@@ -1,25 +1,32 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:photofolio/pages/edit_page.dart';
+import 'package:photofolio/pages/post_page.dart';
+import 'package:photofolio/pages/setting_page.dart';
 import 'package:photofolio/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class AboutPage extends StatefulWidget{
-
   AboutPageState createState() => AboutPageState();
 }
 
 
 
 class AboutPageState extends State<AboutPage> {
+
   TextEditingController introduceController;
+
+  
 
   List<String> ss = ['ff','gg','ewerqrq','vvv','zzz','qqq','tt'];
   // var ac= <ActionChip>[];
   List<ActionChip> ac = List<ActionChip>();
   
+
+
   @override
-  void initState() {
-    
+  Widget build(BuildContext context) {
+
     for(int i=0;i<ss.length;i++){
       ac.add(
         ActionChip(
@@ -31,14 +38,14 @@ class AboutPageState extends State<AboutPage> {
       );
     }
 
-  }
 
-  @override
-  Widget build(BuildContext context) {
     UserLogin userLogin = Provider.of<UserLogin>(context);
-    if(!userLogin.getIsLogin())
+    if(userLogin.getIsLogin())
     {
       print('no login');
+    }
+    else{
+
     }
 
     //introduceController.text ="sgg";
@@ -54,7 +61,14 @@ class AboutPageState extends State<AboutPage> {
             indent: 200,
             endIndent: 200,
           ),
-          userInterestSection
+          
+          // Container(
+          //   margin: EdgeInsets.fromLTRB(400, 100, 400, 100),
+          //   child: SingleChildScrollView(
+          //     child: buildFake(context,temp),
+          //   ),
+          // )
+          
         ],
       )
 
@@ -67,7 +81,7 @@ class AboutPageState extends State<AboutPage> {
   Widget userInfoSection(BuildContext context, UserLogin userLogin) {
     return Container(
       margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
-      color: Colors.pink,
+      color: Colors.grey[100],
       padding: EdgeInsets.fromLTRB(200, 50, 200, 30),
       
       child: Row(
@@ -83,17 +97,38 @@ class AboutPageState extends State<AboutPage> {
                   SizedBox(
                     width: 150,
                     height: 150,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage('https://picsum.photos/250?image=9'),
+                    child: CircleAvatar(  //NetworkImage('https://picsum.photos/250?image=9')
+                      // backgroundImage: temp.isProfile == false ? Image.asset('../assets/none.png').image : Image.asset('../assets/lee.png').image,
                       backgroundColor: Color(0xFFFFFFFF),
                     ),
                   ),
+                  // Container(
+                  //   width: 200,
+                  //   child: Wrap(
+                  //     children: ac,
+                  //   ),
+                  // ),
                   Container(
-                    width: 200,
-                    child: Wrap(
-                      children: ac,
+                    margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: RaisedButton(
+                      child: Text("글쓰기"),
+                      onPressed: (){
+                        showEditPostDialog(context);
+                      },
                     ),
                   ),
+                  Container(
+                    margin: EdgeInsets.all(20),
+                    child: RaisedButton(
+                      child: Text("편집"),
+                      onPressed: (){
+                        showSettingDialog(context);
+                      },
+                    ),
+                  )
+                  
+                  
+
                 ],
               ),
               
@@ -106,16 +141,18 @@ class AboutPageState extends State<AboutPage> {
                   
                   children: <Widget>[           
                     Container(
-                      color: Colors.pink,
+                      // color: Colors.pink,
                       child: Text(
-                        userLogin.getNickName(),
+                        userLogin.getMe().nickname == null ? "":userLogin.getMe().nickname,
                         style: TextStyle(fontSize: 40),
                       ),
                     ),
                     Container(
-                      color: Colors.pink,
+                      //color: Colors.pink,
                       child: Text(
-                        'gaggagag\nagsgs\n\ndfgdfgdvvvvvvvvvvvvvvvvvvvvf\n'
+                        'temp'
+                        // userLogin.getMe().infoText ==null ?"" : userLogin.getMe().infoText,
+                        // temp.isIntro == false ? "" : "안녕하세요"
                       ),
                     )                           
                   ],
@@ -141,7 +178,26 @@ class AboutPageState extends State<AboutPage> {
     child : Column(
       children: <Widget>[
         //NavigationBar()
-        card,
+        Card(
+                margin: EdgeInsets.all(20),      
+                elevation: 5,
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  children: <Widget>[
+                    ListTile(
+                      title: Text('안녕하세요'),
+                      subtitle: Text(
+                        'flunge',
+                        style: TextStyle(color: Colors.black38),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset('../assets/blue.png',fit: BoxFit.fill,),
+                    ),        
+                  ],
+                ),
+              ),
       ],
     )
 
@@ -170,27 +226,98 @@ class AboutPageState extends State<AboutPage> {
   );
 
 
-  static var card = 
-    Card(
-      elevation: 20,
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            title: Text('title'),
-            subtitle: Text(
-              'subTitle',
-              style: TextStyle(color: Colors.black38),
+
+  Future<void> showEditPostDialog(BuildContext context){
+    return showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.pink[500].withAlpha(30),
+      barrierLabel: "ff" ,
+      transitionDuration: new Duration(seconds: 1),
+      
+      pageBuilder: (BuildContext con, Animation ani, Animation secAni){
+        
+        return AlertDialog(
+          elevation: 10,
+       
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: MediaQuery.of(context).size.width*0.6,
+            child: EditPage(),
+          )
+        );
+      }
+
+    );
+  }
+
+  Future<void> showPostDialog(BuildContext context){
+    return showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.pink[500].withAlpha(30),
+      barrierLabel: "ff" ,
+      transitionDuration: new Duration(seconds: 1),
+      
+      pageBuilder: (BuildContext con, Animation ani, Animation secAni){
+        
+        return AlertDialog(
+          elevation: 10,
+       
+          contentPadding: EdgeInsets.zero,
+          content: 
+          Container(
+            width: MediaQuery.of(context).size.width*0.6,
+            child: PostPage(),
+          )
+        );
+      }
+
+    );
+  }
+
+  Future<void> showSettingDialog(BuildContext context){
+    return showGeneralDialog(
+      context: context,
+      
+      barrierColor: Colors.blue.withAlpha(70),
+      transitionDuration: new Duration(milliseconds: 400),
+      //barrierDismissible: false,
+      pageBuilder: (BuildContext con, Animation ani, Animation secAni){
+        return AlertDialog(
+          elevation: 10,
+          //backgroundColor: Colors.yellow,
+         // contentPadding: EdgeInsets.zero,
+          // content: Container(
+          //   width: MediaQuery.of(context).size.width*0.4,
+          //   child: LoginPage(),
+          // )
+          content: Container(
+            width: MediaQuery.of(context).size.width*0.3,
+            child: SingleChildScrollView(
+            padding: EdgeInsets.zero,
+            //width: MediaQuery.of(context).size.width*0.4,
+            child: Column(
+              children: [
+                Align(
+                  child: IconButton(
+                      iconSize: 20,
+                      icon: Icon(Icons.cancel_outlined,),
+                      onPressed: () => Navigator.of(context).pop(),
+                  ), 
+                  alignment: FractionalOffset(1, 0),
+                ),
+                SettingPage()
+              ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('dummy text dummy text dummy text dummy text'),
-          ),
-          Image.network('https://picsum.photos/250?image=9')
-        ],
-      ),
+          )
+        );
+      }
+
     );
+  }
+
 
 
 }

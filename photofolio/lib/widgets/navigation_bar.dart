@@ -139,8 +139,13 @@ class NavigationBarState extends State<NavigationBar>{
         Expanded(
             flex: 1,
             child: Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child:Text('PhotoFolioKR'),
+              margin: EdgeInsets.fromLTRB(30, 0, 10, 0),
+              child:Text('PHOTOFOLIO',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w400
+                ),
+              ),
             )
           ),
           NavigationItem(
@@ -164,6 +169,7 @@ class NavigationBarState extends State<NavigationBar>{
               showLoginDialog(navKey.currentContext,userLogin);
             },
           ),
+          Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 0),)
           // RaisedButton(
           //   child:Text(login + userLogin.getIsLogin().toString()),
           //   padding : const EdgeInsets.symmetric(horizontal: 40),
@@ -180,8 +186,13 @@ class NavigationBarState extends State<NavigationBar>{
         Expanded(
             flex: 1,
             child: Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Text("logo"),
+              margin: EdgeInsets.fromLTRB(30, 0, 10, 0),
+              child:Text('PHOTOFOLIO',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w400
+                ),
+              ),
             )
           ),
           NavigationItem(

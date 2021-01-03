@@ -34,31 +34,42 @@ class HomePageState extends State<HomePage> {
   //Future<List<dynamic>> posts;
 
   Future<List<Post>> fetchPost() async{
-
+    print('start fetch');
     FormData formData = FormData.fromMap({
-      'search' : 'home'
+      'search' : '한글'
     });
 
     Dio dio = Dio();
-    var response = await dio.post(baseUrl, data: formData,); //options: Options(contentType:  Headers.formUrlEncodedContentType)
+
+
+    var response = await dio.post(baseUrl, data: formData,); //options: Options(contentType:  Headers.formUrlEncodedContentType, responseType: ResponseType.plain)
     print(response.statusCode.toString());
-    
+ 
+
     if(response.statusCode==200){
       
-      print(response.data.runtimeType);
+      print(response.data.runtimeType.toString() +'///');
+      //jsonDecode(utf8.decode(response.data));
       var data = response.data as Map<String, dynamic>;
+      //var data = rr as Map<String, dynamic>;
+
       List<Post> posts = List<Post>();
+      print(posts.length.toString() + "fsfsdf");
+
       data.forEach((key, value) {
-        print(key.toString());
+        print(value['thumbnail']);
+        var thumbnail = value['thumbnail'].toString().split('/');
+        var real_thumbnail = 'https://rest-api-server-axfra.run.goorm.io/'+'/' + thumbnail[7] + '/' +thumbnail[8]+ '/'+thumbnail[9];
         posts.add(new Post(id: value['id'],
           postTitle: value['title'],
-          postThumbNail: value['thumbnail'],
+          postThumbNail: real_thumbnail,
           userNickname: value['nickname'],
           postExplain: value['explanation'],
           postLink: value['link']
         ));
+        
       });
-      print(posts[0].postThumbNail);
+      
       return posts;
     }
   }
@@ -184,8 +195,9 @@ class HomePageState extends State<HomePage> {
               flex: 1,
               child: Image(
                 // image: Image.network('https://picsum.photos/250?image=9',fit: BoxFit.fill,).image,
-                image: Image.network('https://rest-api-server-axfra.run.goorm.io'+post.postThumbNail,fit: BoxFit.fill,).image,
-                //image: posts[index].thumbNail.image,
+                image: Image.network(post.postThumbNail,fit: BoxFit.fill,).image,
+                //image: Image.network('https://rest-api-server-axfra.run.goorm.io'+'/static/images/1b539288-ac7a-4247-964a-659f54fe7c0f.png',fit: BoxFit.fill,).image,
+                
                 width: double.maxFinite,         
               ),
             ),        

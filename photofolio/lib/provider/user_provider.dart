@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
+import 'package:photofolio/routes/routes.dart';
 import 'package:photofolio/store/User.dart';
 
 
@@ -8,21 +9,10 @@ class UserLogin with ChangeNotifier {
 
   bool _isLogin =false;
   User _me;
-  String _email ="";
-  String _pwd="";
-  String _nickname=""; // 이름으로 쓰일거에요!
-  String _infoText=""; // 간략하게 자신을 소개 하는 글을 작성해요!
-  String _visitedUser="";
 
   bool getIsLogin() => _isLogin;
-  String getEmail() => _email;
-  String getPw() => _pwd;
-  String getNickName()=>_nickname;
-  String getInfoText()=>_infoText;
-  String getVistedUser() => _visitedUser;
-
   User getMe()=>_me;
-  String baseUrl="https://rest-api-server-axfra.run.goorm.io/api";
+  //String baseUrl="https://rest-api-server-axfra.run.goorm.io/api";
 
   void login(String email, String pwd) async{
     final res=await http.post(baseUrl+"/login",

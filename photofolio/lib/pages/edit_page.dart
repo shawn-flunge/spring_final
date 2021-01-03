@@ -47,7 +47,7 @@ class EditPageState extends State<EditPage>{
   @override
   Widget build(BuildContext context) {
     UserLogin userLogin = Provider.of<UserLogin>(context);
-    print(userLogin.getNickName());
+
     return SingleChildScrollView(
 
       child:Column(

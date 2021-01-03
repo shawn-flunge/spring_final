@@ -17,18 +17,16 @@ class NavigationBar extends StatefulWidget{
 class NavigationBarState extends State<NavigationBar>{
 
   int index =0;
-  String login;
   List<Widget> widgets;
 
   @override
   Widget build(BuildContext context) {
     UserLogin userLogin = Provider.of<UserLogin>(context);
     if(userLogin.getIsLogin()==false){
-      login = "Login";
       setWidgets(userLogin);
     }
     else{
-      login = userLogin.getNickName();
+
       print('로그인이 되어 있는 상태라고 에러를 띄워보아요!');
       setWidgets(userLogin);
     }

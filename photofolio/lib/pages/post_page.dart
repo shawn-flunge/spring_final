@@ -1,10 +1,14 @@
 
 
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:photofolio/provider/post_provider.dart';
 import 'package:photofolio/routes/routes.dart';
+import 'package:photofolio/store/PostImage.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PostPage extends StatefulWidget{
@@ -21,14 +25,37 @@ class PostPageState extends State<PostPage>{
   Image img2 = Image.network('https://picsum.photos/250?image=9');
 
   // List<Image> imgs = [Image.network('https://picsum.photos/250?image=9',fit: BoxFit.scaleDown,),Image.network('https://picsum.photos/250?image=9',fit: BoxFit.fitWidth)];
-  List<Image> imgs = [Image.asset('../assets/pupple.png'),Image.asset('../assets/yellow.png'),Image.asset('../assets/red.png')];
-  List<String> strs = ['보라','노랑','빨강'];
+  Map<int,PostImage> map = Map<int,PostImage>();
 
+  fetchPost(PostProvider postProvider) async{
+    print('searching post image');
+    FormData formData = FormData.fromMap({
+      'id' : postProvider.getSelectedPost().id
+    });
+    Dio dio = Dio();
+
+    var response = await dio.post(baseUrl+'/post', data: formData,); //options: Options(contentType:  Headers.formUrlEncodedContentType, responseType: ResponseType.plain)
+ 
+    if(response.statusCode == 200){
+      var data = response.data as Map<String, dynamic>;
+
+      print(data.toString());
+      print(data.runtimeType);
+      map = Map<int,PostImage>();
+      data.forEach((key, value) {
+        map[int.parse(key)] = PostImage(value['img'],value['comment']);
+        print(key + '////' +value['img'] + '////' + value['comment']);
+      });
+
+
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    imgTextController.text = strs[0];
+    PostProvider postProvider = Provider.of<PostProvider>(context);
+    print(postProvider.getSelectedPost().toString() + "@@@@@@@@@@@@@@@@@");
+    fetchPost(postProvider);
 
     return SingleChildScrollView(
 
@@ -48,18 +75,18 @@ class PostPageState extends State<PostPage>{
             //color: Colors.deepPurple,
             margin: EdgeInsets.all(20),
             width: double.infinity,
-            child: buildTitle(),
+            child: buildTitle(postProvider),
           ),
-          Container(
-            //color: Colors.indigo,
-            width: double.infinity,
-            height: 500,
-            child: buildImageRow(),
-          ),
+          // Container(
+          //   //color: Colors.indigo,
+          //   width: double.infinity,
+          //   height: 500,
+          //   child: buildImageRow(postProvider),
+          // ),
           Container(
             margin: EdgeInsets.all(20),
             width: double.infinity,
-            child: buildComment(),
+            child: buildComment(postProvider),
           )
 
         ],
@@ -69,13 +96,13 @@ class PostPageState extends State<PostPage>{
 
   }
 
-  Widget buildTitle(){
+  Widget buildTitle(PostProvider postProvider){
     return Column(
       //mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'flutter와 spring boot로 만드는spring photofolio',
+          postProvider.getSelectedPost().postTitle,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 30
@@ -86,7 +113,7 @@ class PostPageState extends State<PostPage>{
             children: [
               //Icon(Icons.account_circle_outlined),
               TextButton(
-                child: Text('flunge',
+                child: Text(postProvider.getSelectedPost().userNickname,
                   style: TextStyle(
                     fontSize: 20
                   ),  
@@ -107,7 +134,7 @@ class PostPageState extends State<PostPage>{
     );
   }
 
-  Widget buildImageRow(){
+  Widget buildImageRow(PostProvider postProvider){
     return Row(
       // crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -120,9 +147,9 @@ class PostPageState extends State<PostPage>{
           child: Swiper(
             //containerWidth: 200,
             itemWidth: 500,
-            itemCount: imgs.length,
+            // itemCount: imgs.length,
             itemBuilder: (context, count){
-              return imgs[count];
+              // return imgs[count];
             },
             //layout: SwiperLayout.STACK,
             pagination: new SwiperPagination(),
@@ -135,7 +162,7 @@ class PostPageState extends State<PostPage>{
               print("onTap : "+index.toString());
             },
             onIndexChanged: (index){
-             imgTextController.text=strs[index];
+             
             },
           ),
         ),
@@ -153,8 +180,8 @@ class PostPageState extends State<PostPage>{
     );
   }
 
-  Widget buildComment(){
-    commentController.text="디자인작업 끝나고 서비스 시작합니다!";
+  Widget buildComment(PostProvider postProvider){
+    commentController.text=postProvider.getSelectedPost().postExplain;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,7 +193,7 @@ class PostPageState extends State<PostPage>{
           maxLines: 4,
         ),
         InkWell(
-          child: Text('https://github.com/shawn-flunge'),
+          child: Text(postProvider.getSelectedPost().postLink),
           onTap: () => launch('https://github.com/shawn-flunge'),
         ),
         Padding(padding: EdgeInsets.all(50),)

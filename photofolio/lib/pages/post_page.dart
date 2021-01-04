@@ -24,10 +24,13 @@ class PostPageState extends State<PostPage>{
   Image img = Image.network('https://picsum.photos/250?image=9');
   Image img2 = Image.network('https://picsum.photos/250?image=9');
 
-  // List<Image> imgs = [Image.network('https://picsum.photos/250?image=9',fit: BoxFit.scaleDown,),Image.network('https://picsum.photos/250?image=9',fit: BoxFit.fitWidth)];
+
+  List<Image> imgs = List<Image>();
+  List<String> comments =List<String>();
+
   Map<int,PostImage> map = Map<int,PostImage>();
 
-  fetchPost(PostProvider postProvider) async{
+  Future<String> fetchPost(PostProvider postProvider) async{
     print('searching post image');
     FormData formData = FormData.fromMap({
       'id' : postProvider.getSelectedPost().id
@@ -44,54 +47,74 @@ class PostPageState extends State<PostPage>{
       map = Map<int,PostImage>();
       data.forEach((key, value) {
         map[int.parse(key)] = PostImage(value['img'],value['comment']);
-        print(key + '////' +value['img'] + '////' + value['comment']);
+        var imgPath = imageUrl+'/' + value['img'].toString().split('/')[9];
+        imgs.add(Image.network(imgPath));
+        comments.add(value['comment']);
+        print(key + '////' + value['comment']);
       });
-
+      print(comments.length);
+      for(int i=0; i<comments.length;i++){
+        print(comments[i].toString()+'@@@@@@@@@@@@');
+      }
 
     }
+    return "ok";
   }
+
 
   @override
   Widget build(BuildContext context) {
     PostProvider postProvider = Provider.of<PostProvider>(context);
     print(postProvider.getSelectedPost().toString() + "@@@@@@@@@@@@@@@@@");
-    fetchPost(postProvider);
 
-    return SingleChildScrollView(
+    return FutureBuilder(
+      future: fetchPost(postProvider),
+      builder: (context, snapshot){
+        if(snapshot.hasData == false)
+          return Text('false');
+        else if(snapshot.hasError){
+          return Text('error : ' +snapshot.error);
+        }
+        else{
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                //buildImageRow(),
+                Align(
+                      child: IconButton(
+                          iconSize: 20,
+                          icon: Icon(Icons.cancel_outlined,),
+                          onPressed: () => Navigator.of(context).pop(),
+                      ), 
+                      alignment: FractionalOffset(1, 0),
+                    ),
+                Container(
+                  //color: Colors.deepPurple,
+                  margin: EdgeInsets.all(20),
+                  width: double.infinity,
+                  child: buildTitle(postProvider),
+                ),
+                Container(
+                  //color: Colors.indigo,
+                  width: double.infinity,
+                  height: 500,
+                  child: buildImageRow(postProvider),
+                ),
+                Container(
+                  margin: EdgeInsets.all(20),
+                  width: double.infinity,
+                  child: buildComment(postProvider),
+                )
 
-      child: Column(
-
-        children: [
-          //buildImageRow(),
-          Align(
-                child: IconButton(
-                    iconSize: 20,
-                    icon: Icon(Icons.cancel_outlined,),
-                    onPressed: () => Navigator.of(context).pop(),
-                ), 
-                alignment: FractionalOffset(1, 0),
-              ),
-          Container(
-            //color: Colors.deepPurple,
-            margin: EdgeInsets.all(20),
-            width: double.infinity,
-            child: buildTitle(postProvider),
-          ),
-          // Container(
-          //   //color: Colors.indigo,
-          //   width: double.infinity,
-          //   height: 500,
-          //   child: buildImageRow(postProvider),
-          // ),
-          Container(
-            margin: EdgeInsets.all(20),
-            width: double.infinity,
-            child: buildComment(postProvider),
-          )
-
-        ],
-      ),
+              ],
+            ),
+          );
+        }
+         
+      },
     );
+
+
     
 
   }
@@ -135,6 +158,7 @@ class PostPageState extends State<PostPage>{
   }
 
   Widget buildImageRow(PostProvider postProvider){
+    imgTextController.text = comments[0];
     return Row(
       // crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -147,9 +171,9 @@ class PostPageState extends State<PostPage>{
           child: Swiper(
             //containerWidth: 200,
             itemWidth: 500,
-            // itemCount: imgs.length,
+            itemCount: imgs.length,
             itemBuilder: (context, count){
-              // return imgs[count];
+              return imgs[count];
             },
             //layout: SwiperLayout.STACK,
             pagination: new SwiperPagination(),
@@ -162,7 +186,7 @@ class PostPageState extends State<PostPage>{
               print("onTap : "+index.toString());
             },
             onIndexChanged: (index){
-             
+             imgTextController.text = comments[index];
             },
           ),
         ),
@@ -173,7 +197,6 @@ class PostPageState extends State<PostPage>{
             controller: imgTextController,
             maxLines: 7,
             readOnly: true,
-
           ),
         )
       ],

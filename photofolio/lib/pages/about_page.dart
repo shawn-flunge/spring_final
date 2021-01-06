@@ -1,10 +1,18 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/widgets/controller.dart';
 import 'package:photofolio/pages/edit_page.dart';
 import 'package:photofolio/pages/post_page.dart';
+import 'package:photofolio/pages/rich_edit_page.dart';
 import 'package:photofolio/pages/setting_page.dart';
 import 'package:photofolio/provider/user_provider.dart';
+import 'rich_edit_page.dart';
 import 'package:provider/provider.dart';
+import 'package:extended_tabs/extended_tabs.dart';
+import 'package:flutter_quill/widgets/controller.dart';
+import 'package:flutter_quill/widgets/editor.dart';
+import 'package:flutter_quill/widgets/toolbar.dart';
+
 
 class AboutPage extends StatefulWidget{
   AboutPageState createState() => AboutPageState();
@@ -12,7 +20,9 @@ class AboutPage extends StatefulWidget{
 
 
 
-class AboutPageState extends State<AboutPage> {
+class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
+
+  TabController tabController;
 
   TextEditingController introduceController;
 
@@ -22,7 +32,11 @@ class AboutPageState extends State<AboutPage> {
   // var ac= <ActionChip>[];
   List<ActionChip> ac = List<ActionChip>();
   
-
+  @override
+  void initState() {
+    super.initState();
+    tabController= TabController(length: 2,vsync: this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +67,7 @@ class AboutPageState extends State<AboutPage> {
 
       body: ListView(
         children: [
-          userInfoSection(context,userLogin),
+          buildUserInfoSection(context,userLogin),
           const Divider(
             color: Colors.black38,
             height: 30,
@@ -62,12 +76,13 @@ class AboutPageState extends State<AboutPage> {
             endIndent: 200,
           ),
           
-          // Container(
-          //   margin: EdgeInsets.fromLTRB(400, 100, 400, 100),
-          //   child: SingleChildScrollView(
-          //     child: buildFake(context,temp),
-          //   ),
-          // )
+          Container(
+            margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
+            color: Colors.pink,
+            //width: 1000,
+            height: 2000,
+            child: buildUserActivitySection(),
+          )
           
         ],
       )
@@ -78,7 +93,7 @@ class AboutPageState extends State<AboutPage> {
   }
 
 
-  Widget userInfoSection(BuildContext context, UserLogin userLogin) {
+  Widget buildUserInfoSection(BuildContext context, UserLogin userLogin) {
     return Container(
       margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
       color: Colors.grey[100],
@@ -150,7 +165,7 @@ class AboutPageState extends State<AboutPage> {
                     Container(
                       //color: Colors.pink,
                       child: Text(
-                        'temp'
+                        userLogin.getMe().infoText == null ?"":userLogin.getMe().infoText
                         // userLogin.getMe().infoText ==null ?"" : userLogin.getMe().infoText,
                         // temp.isIntro == false ? "" : "안녕하세요"
                       ),
@@ -173,61 +188,88 @@ class AboutPageState extends State<AboutPage> {
     );
   }
 
-  Widget userInterestSection = Container(
-    margin: EdgeInsets.all(300),
-    child : Column(
-      children: <Widget>[
-        //NavigationBar()
-        Card(
-                margin: EdgeInsets.all(20),      
-                elevation: 5,
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: <Widget>[
-                    ListTile(
-                      title: Text('안녕하세요'),
-                      subtitle: Text(
-                        'flunge',
-                        style: TextStyle(color: Colors.black38),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Image.asset('../assets/blue.png',fit: BoxFit.fill,),
-                    ),        
-                  ],
-                ),
-              ),
+  Widget buildUserActivitySection(){
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Column(
+        children: <Widget>[
+          TabBar(
+            indicator: ColorTabIndicator(Colors.blueGrey[100]),
+            labelColor: Colors.black,
+            tabs: [
+              Tab(text: '소개',),
+              Tab(text: '활동',),
+            ],
+            controller: tabController,
+          ),
+          Expanded(
+            child: ExtendedTabBarView(
+              children: <Widget>[
+                Text('00'),
+                RaisedButton(
+                  child: Text('edit'),
+                  onPressed: () {
+                    showRichEditorDialog(context);
+                  },
+                )
+              ],
+              controller: tabController,
+            ),
+          )
+        ],
+      ),
+    );
+
+  }
+
+
+  QuillController quillController = QuillController.basic();
+  Widget buildEditor(){
+    
+    return Column(
+      children: [
+        QuillToolbar.basic(
+            controller: quillController, ), //uploadFileCallback: _uploadImageCallBack
+        Expanded(
+          child: Container(
+            child: QuillEditor.basic(
+              controller: quillController,
+              readOnly: false, // change to true to be view only mode
+            ),
+          ),
+        )
       ],
-    )
+    );
+  }
 
-    // child: Row(
-    //   children: [
-    //     Padding(padding: EdgeInsets.all(30),),
-    //     Column(
-    //       children: <Widget>[
-    //         Text(
-    //           'fafafafafaf',
-    //           style: TextStyle(fontSize: 40),
-    //         ),
-    //         Text(
-    //           'fafafafafaf',
-    //           style: TextStyle(fontSize: 40),
-    //         ),
-    //         Text(
-    //           'fafafafafaf\n\n\n\n\n\n\n\n\n\n\naffaf',
-    //           style: TextStyle(fontSize: 40),
-    //         ),
-    //       ],
-    //     )
-        
-    //   ],
-    // ),
-  );
+  showRichEditorDialog(BuildContext context){
+    return showGeneralDialog(
+      context: context,
+      barrierColor: Colors.blue.withAlpha(70),
+      transitionDuration: new Duration(milliseconds: 200),
+      barrierDismissible: true,
+      barrierLabel: 'ff',
+      pageBuilder: (BuildContext con, Animation ani, Animation secAni){
+        return AlertDialog(
+          elevation: 10,
+          //backgroundColor: Colors.yellow,
+         // contentPadding: EdgeInsets.zero,
+          // content: Container(
+          //   width: MediaQuery.of(context).size.width*0.4,
+          //   child: LoginPage(),
+          // )
+          content: Container(
+            width: MediaQuery.of(context).size.width*0.3,
+            child: RichEditor()
+          )
+        );
+      }
+
+    );
+  }
 
 
-
-  Future<void> showEditPostDialog(BuildContext context){
+  showEditPostDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
       barrierDismissible: false,
@@ -251,7 +293,7 @@ class AboutPageState extends State<AboutPage> {
     );
   }
 
-  Future<void> showPostDialog(BuildContext context){
+  showPostDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
       barrierDismissible: false,
@@ -276,7 +318,7 @@ class AboutPageState extends State<AboutPage> {
     );
   }
 
-  Future<void> showSettingDialog(BuildContext context){
+  showSettingDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
       
@@ -322,32 +364,6 @@ class AboutPageState extends State<AboutPage> {
 
 }
 
-
-// Row(
-//                     children: <Widget>[
-//                       Column(
-//                         children: <Widget>[
-//                           Text('팔로우',
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                           Text('0', 
-//                             style: TextStyle(fontWeight: FontWeight.bold),
-//                           )
-//                         ],
-//                       ),
-//                       Padding(padding: EdgeInsets.all(20),),
-//                       Column(
-//                         children: <Widget>[
-//                           Text('팔로워',
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                           Text('0', 
-//                             style: TextStyle(fontWeight: FontWeight.bold),
-//                           )
-//                         ],
-//                       )
-//                     ],
-//                   ),
 
 
 

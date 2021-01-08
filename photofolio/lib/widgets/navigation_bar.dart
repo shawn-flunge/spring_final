@@ -26,15 +26,8 @@ class NavigationBarState extends State<NavigationBar>{
       setWidgets(userLogin);
     }
     else{
-
-      print('로그인이 되어 있는 상태라고 에러를 띄워보아요!');
       setWidgets(userLogin);
     }
-      
-
-
-
-    
 
     return Container(
       height : 100,
@@ -194,7 +187,7 @@ class NavigationBarState extends State<NavigationBar>{
             onHighlight:onHighlight,
           ),
           NavigationItem(
-            title: "About",
+            title: userLogin.getMe().nickname,
             routeName: routeAbout,
             selected:index==1,
             onHighlight:onHighlight,

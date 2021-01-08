@@ -69,7 +69,7 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
   @override
   void initState() {
     super.initState();
-    tabController= TabController(length: 2,vsync: this);
+    tabController= TabController(length: 3,vsync: this);
   }
 
   @override
@@ -150,6 +150,8 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
                     height: 150,
                     child: CircleAvatar(  
                       // backgroundImage: temp.isProfile == false ? Image.asset('../assets/none.png').image : Image.asset('../assets/lee.png').image,
+                      backgroundImage: Image.network(userLogin.getMe().imgPath ,fit: BoxFit.contain,).image,
+                      //backgroundImage: Image.network('https://picsum.photos/250?image=9').image,
                       backgroundColor: Color(0xFFFFFFFF),
                     ),
                   ),
@@ -229,7 +231,7 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
               tabs: [
                 Tab(text: 'Activity',),
                 Tab(text: 'Story',),
-                Tab(text: 'Information',),
+                Tab(text: 'Me',),
               ],
               controller: tabController,
             ),
@@ -237,13 +239,14 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
               child: ExtendedTabBarView(
                 children: <Widget>[
                   buildGrid(posts,postProvider),
-                  Text('this service come soon'),
-                  RaisedButton(
-                    child: Text('edit'),
-                    onPressed: () {
-                      showRichEditorDialog(context);
-                    },
-                  )
+                  Text('Story service comes soon'),
+                  Text('Me service comes soon'),
+                  // RaisedButton(
+                  //   child: Text('edit'),
+                  //   onPressed: () {
+                  //     showRichEditorDialog(context);
+                  //   },
+                  // )
                 ],
                 controller: tabController,
               ),
@@ -383,9 +386,9 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
   showPostDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       barrierColor: Colors.pink[500].withAlpha(30),
-      barrierLabel: "ff" ,
+      barrierLabel: "show post" ,
       transitionDuration: new Duration(seconds: 1),
       
       pageBuilder: (BuildContext con, Animation ani, Animation secAni){
@@ -404,49 +407,8 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
 
     );
   }
+  
 
-  showSettingDialog2(BuildContext context){
-    return showGeneralDialog(
-      context: context,
-      
-      barrierColor: Colors.blue.withAlpha(70),
-      transitionDuration: new Duration(milliseconds: 400),
-      barrierDismissible: true,
-      barrierLabel: 'setting dialog barrier',
-      pageBuilder: (BuildContext con, Animation ani, Animation secAni){
-        return AlertDialog(
-          elevation: 10,
-          //backgroundColor: Colors.yellow,
-         // contentPadding: EdgeInsets.zero,
-          // content: Container(
-          //   width: MediaQuery.of(context).size.width*0.4,
-          //   child: LoginPage(),
-          // )
-          content: Container(
-            width: MediaQuery.of(context).size.width*0.3,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.zero,
-              //width: MediaQuery.of(context).size.width*0.4,
-              child: Column(
-                children: [
-                  Align(
-                    child: IconButton(
-                        iconSize: 20,
-                        icon: Icon(Icons.cancel_outlined,),
-                        onPressed: () => Navigator.of(context).pop(),
-                    ), 
-                    alignment: FractionalOffset(1, 0),
-                  ),
-                  SettingPage()
-                ],
-              ),
-            ),
-          )
-        );
-      }
-
-    );
-  }
 
   showSettingDialog(BuildContext context){
     return showGeneralDialog(

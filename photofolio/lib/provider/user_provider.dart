@@ -24,9 +24,10 @@ class UserLogin with ChangeNotifier {
     if(res.body.isEmpty){
 
     }else{
-      map=Map.castFrom(json.decode(res.body));
+      var decodeData = utf8.decode(res.bodyBytes);
+      var data = jsonDecode(decodeData);
+      map = Map.castFrom(data);
       _me=User.fromJson(map);
-      
 
       _isLogin = !_isLogin;
       print(User.infoPrint(_me));

@@ -199,45 +199,6 @@ class EditPageState extends State<EditPage>{
               Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 20),),
               Container(
                 child: RaisedButton(
-                  child:Text(thumbnail),
-                  onPressed: () async{
-
-                    FilePickerResult result = await FilePicker.platform.pickFiles(
-                      type: FileType.custom,
-                      allowedExtensions: ['jpg','png','jpeg' ],
-                    );
-                    if(result != null) {
-                      thumbnailFile = result.files.first;
-                      if(thumbnailFile.extension == 'jpg' || thumbnailFile.extension == 'png' || thumbnailFile.extension == 'jpeg' )
-                      {
-                        print(thumbnailFile.name);
-                        print(thumbnailFile.size);
-                        print(thumbnailFile.extension);
-                        setState(() {
-                          thumbnail = thumbnailFile.name;                              
-                        });
-                      }
-                      else{
-                        print('file is not img');
-                      }
-                      
-                    } else {
-                      // User canceled the picker
-                      print('result is null');
-                    }
-                    // final _image = await FlutterWebImagePicker.getImage;
-                    // //ms[_image.semanticLabel] = _image;
-                    // setState(() {
-                    //   //print(_image.toString());
-                    //   thumbnailImage = _image;
-                    //   thumbnail = _image.semanticLabel;          
-                    // });
-                  },
-                ),
-              ),
-              Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 20),),
-              Container(
-                child: RaisedButton(
                   child:Text('이미지 선택'),
                   onPressed:  () async{
                     FilePickerResult result = await FilePicker.platform.pickFiles(

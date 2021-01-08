@@ -81,6 +81,8 @@ class NavigationBarState extends State<NavigationBar>{
     return showGeneralDialog(
       context: context,
       barrierColor: Colors.blue.withAlpha(70),
+      barrierDismissible: true,
+      barrierLabel: 'login dialog',
       transitionDuration: new Duration(milliseconds: 400),
       pageBuilder: (BuildContext con, Animation ani, Animation secAni){
         return AlertDialog(
@@ -92,14 +94,6 @@ class NavigationBarState extends State<NavigationBar>{
             //width: MediaQuery.of(context).size.width*0.4,
             child: Column(
               children: [
-                Align(
-                  child: IconButton(
-                      iconSize: 20,
-                      icon: Icon(Icons.cancel_outlined,),
-                      onPressed: () =>Navigator.of(context).pop(),
-                  ), 
-                  alignment: FractionalOffset(1, 0),
-                ),
                 LoginPage(userLogin)
               ],
             ),

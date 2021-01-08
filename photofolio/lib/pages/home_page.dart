@@ -49,10 +49,7 @@ class HomePageState extends State<HomePage> {
       var data = response.data as Map<String, dynamic>;
 
       List<Post> posts = List<Post>();
-      print(posts.length.toString() + "fsfsdf");
-
       data.forEach((key, value) {
-        print(value['thumbnail']);
         var thumbnail = value['thumbnail'].toString().split('/');
         var realThumbnail = imageUrl+'/' + thumbnail[9];
         posts.add(new Post(id: value['id'],
@@ -169,7 +166,7 @@ class HomePageState extends State<HomePage> {
   Future<void> showPostDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       barrierColor: Colors.pink[500].withAlpha(30),
       barrierLabel: "ff" ,
       transitionDuration: new Duration(seconds: 1),

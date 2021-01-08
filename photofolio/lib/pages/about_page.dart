@@ -1,11 +1,15 @@
 import 'dart:ui';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/widgets/controller.dart';
 import 'package:photofolio/pages/edit_page.dart';
 import 'package:photofolio/pages/post_page.dart';
 import 'package:photofolio/pages/rich_edit_page.dart';
 import 'package:photofolio/pages/setting_page.dart';
+import 'package:photofolio/provider/post_provider.dart';
 import 'package:photofolio/provider/user_provider.dart';
+import 'package:photofolio/routes/routes.dart';
+import 'package:photofolio/store/post.dart';
 import 'rich_edit_page.dart';
 import 'package:provider/provider.dart';
 import 'package:extended_tabs/extended_tabs.dart';
@@ -21,17 +25,47 @@ class AboutPage extends StatefulWidget{
 
 
 class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
-
+  
   TabController tabController;
 
   TextEditingController introduceController;
-
+  QuillController quillController = QuillController.basic();
   
 
   List<String> ss = ['ff','gg','ewerqrq','vvv','zzz','qqq','tt'];
-  // var ac= <ActionChip>[];
-  List<ActionChip> ac = List<ActionChip>();
+  List<ActionChip> chips = List<ActionChip>();
   
+  Future<List<Post>> fetchActivity(String nickname) async{
+    print('start fetch');
+    FormData formData = FormData.fromMap({
+      'nickname' : nickname,
+      'tag' : 'none'
+    });
+    Dio dio = Dio();
+
+    var response = await dio.post(baseUrl+'/about', data: formData,); //options: Options(contentType:  Headers.formUrlEncodedContentType, responseType: ResponseType.plain)
+
+    if(response.statusCode ==200){
+      var data = response.data as Map<String, dynamic>;
+      List<Post> posts = List<Post>();
+      data.forEach((key, value) {
+        var thumbnail = value['thumbnail'].toString().split('/');
+        var realThumbnail = imageUrl+'/' + thumbnail[9];
+        posts.add(new Post(id: value['id'],
+          postTitle: value['title'],
+          postThumbNail: realThumbnail,
+          userNickname: value['nickname'],
+          postExplain: value['explanation'],
+          postLink: value['link']
+        ));
+        
+      });
+      return posts;
+    }
+
+
+  }
+
   @override
   void initState() {
     super.initState();
@@ -41,31 +75,24 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
 
-    for(int i=0;i<ss.length;i++){
-      ac.add(
-        ActionChip(
-          label: Text(ss[i]),
-          avatar: Icon(Icons.check),
-          backgroundColor: Colors.cyan,
-          onPressed: (){print(ss[i]);},
-        )
-      );
-    }
-
+    //chip
+    // for(int i=0;i<ss.length;i++){
+    //   chips.add(
+    //     ActionChip(
+    //       label: Text(ss[i]),
+    //       avatar: Icon(Icons.check),
+    //       backgroundColor: Colors.cyan,
+    //       onPressed: (){print(ss[i]);},
+    //     )
+    //   );
+    // }
 
     UserLogin userLogin = Provider.of<UserLogin>(context);
-    if(userLogin.getIsLogin())
-    {
-      print('no login');
-    }
-    else{
+    PostProvider postProvider = Provider.of<PostProvider>(context);
 
-    }
+    return SingleChildScrollView(
 
-    //introduceController.text ="sgg";
-    return Scaffold(
-
-      body: ListView(
+      child: Column(
         children: [
           buildUserInfoSection(context,userLogin),
           const Divider(
@@ -76,12 +103,21 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
             endIndent: 200,
           ),
           
+          // Container(
+          //   margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
+          //   color: Colors.pink,
+          //   height: 1000,
+          //   child: buildUserActivitySection(userLogin, postProvider),
+          // ),
           Container(
             margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
-            color: Colors.pink,
-            //width: 1000,
-            height: 2000,
-            child: buildUserActivitySection(),
+            // child: buildUserActivitySection(userLogin, postProvider),
+            child: FutureBuilder<List<Post>>(
+              future: fetchActivity(userLogin.getMe().nickname),
+              builder: (context, snapshot){
+                return snapshot.hasData ? buildUserActivitySection(userLogin,postProvider,snapshot.data) : Text('ff');
+              },
+            ),
           )
           
         ],
@@ -112,7 +148,7 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
                   SizedBox(
                     width: 150,
                     height: 150,
-                    child: CircleAvatar(  //NetworkImage('https://picsum.photos/250?image=9')
+                    child: CircleAvatar(  
                       // backgroundImage: temp.isProfile == false ? Image.asset('../assets/none.png').image : Image.asset('../assets/lee.png').image,
                       backgroundColor: Color(0xFFFFFFFF),
                     ),
@@ -141,9 +177,6 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
                       },
                     ),
                   )
-                  
-                  
-
                 ],
               ),
               
@@ -176,54 +209,108 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
               
             ],
           ),
-        
           Padding(padding: EdgeInsets.all(30),),
-
-          //팔로우, 팔로워
-          
-          
-          
+          //팔로우, 팔로워       
         ],
       ),
     );
   }
 
-  Widget buildUserActivitySection(){
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Column(
-        children: <Widget>[
-          TabBar(
-            indicator: ColorTabIndicator(Colors.blueGrey[100]),
-            labelColor: Colors.black,
-            tabs: [
-              Tab(text: '소개',),
-              Tab(text: '활동',),
-            ],
-            controller: tabController,
-          ),
-          Expanded(
-            child: ExtendedTabBarView(
-              children: <Widget>[
-                Text('00'),
-                RaisedButton(
-                  child: Text('edit'),
-                  onPressed: () {
-                    showRichEditorDialog(context);
-                  },
-                )
+  Widget buildUserActivitySection(UserLogin userLogin, PostProvider postProvider, List<Post> posts){
+    return Container(
+      height: 1000,
+      child:Directionality(
+        textDirection: TextDirection.ltr,
+        child: Column(
+          children: <Widget>[
+            TabBar(
+              indicator: ColorTabIndicator(Colors.blueGrey[100]),
+              labelColor: Colors.black,
+              tabs: [
+                Tab(text: 'Activity',),
+                Tab(text: 'Story',),
+                Tab(text: 'Information',),
               ],
               controller: tabController,
             ),
-          )
-        ],
+            Expanded(  //222222222222222222222222222222222222222222222222222222222
+              child: ExtendedTabBarView(
+                children: <Widget>[
+                  buildGrid(posts,postProvider),
+                  Text('this service come soon'),
+                  RaisedButton(
+                    child: Text('edit'),
+                    onPressed: () {
+                      showRichEditorDialog(context);
+                    },
+                  )
+                ],
+                controller: tabController,
+              ),
+            )
+          ],
+        ),
+      )
+    );
+
+  }
+
+  Widget buildGrid(List<Post> posts, PostProvider postProvider){
+    return GridView.builder(
+      padding: EdgeInsets.all(30),
+      physics: ScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+      ),
+      shrinkWrap: true,
+      itemCount: posts.length,
+      itemBuilder: (context, index) {
+        return buildCard(context, posts[index], postProvider);
+      },
+    ); 
+   
+  }
+
+  Widget buildCard(BuildContext context, Post post, PostProvider postProvider){
+    return Container(
+      //margin: EdgeInsets.all(50),
+      //padding: EdgeInsets.all(50),
+      
+      child: InkWell(
+        child: Card(
+          margin: EdgeInsets.all(20),      
+          elevation: 5,
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                title: Text(post.postTitle),
+                subtitle: Text(
+                  post.userNickname,
+                  style: TextStyle(color: Colors.black38),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Image(
+                  image: Image.network(post.postThumbNail,fit: BoxFit.fill,).image,
+                  width: double.maxFinite,         
+                ),
+              ),        
+            ],
+          ),
+        ),
+        onTap: (){
+          print(post.id.toString() + "###################");
+          postProvider.selectPost(post);
+          showPostDialog(context);
+        },
       ),
     );
 
   }
 
-
-  QuillController quillController = QuillController.basic();
+  
   Widget buildEditor(){
     
     return Column(
@@ -318,13 +405,14 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
     );
   }
 
-  showSettingDialog(BuildContext context){
+  showSettingDialog2(BuildContext context){
     return showGeneralDialog(
       context: context,
       
       barrierColor: Colors.blue.withAlpha(70),
       transitionDuration: new Duration(milliseconds: 400),
-      //barrierDismissible: false,
+      barrierDismissible: true,
+      barrierLabel: 'setting dialog barrier',
       pageBuilder: (BuildContext con, Animation ani, Animation secAni){
         return AlertDialog(
           elevation: 10,
@@ -337,22 +425,22 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
           content: Container(
             width: MediaQuery.of(context).size.width*0.3,
             child: SingleChildScrollView(
-            padding: EdgeInsets.zero,
-            //width: MediaQuery.of(context).size.width*0.4,
-            child: Column(
-              children: [
-                Align(
-                  child: IconButton(
-                      iconSize: 20,
-                      icon: Icon(Icons.cancel_outlined,),
-                      onPressed: () => Navigator.of(context).pop(),
-                  ), 
-                  alignment: FractionalOffset(1, 0),
-                ),
-                SettingPage()
-              ],
+              padding: EdgeInsets.zero,
+              //width: MediaQuery.of(context).size.width*0.4,
+              child: Column(
+                children: [
+                  Align(
+                    child: IconButton(
+                        iconSize: 20,
+                        icon: Icon(Icons.cancel_outlined,),
+                        onPressed: () => Navigator.of(context).pop(),
+                    ), 
+                    alignment: FractionalOffset(1, 0),
+                  ),
+                  SettingPage()
+                ],
+              ),
             ),
-          ),
           )
         );
       }
@@ -360,6 +448,32 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
     );
   }
 
+  showSettingDialog(BuildContext context){
+    return showGeneralDialog(
+      context: context,
+      
+      barrierColor: Colors.blue.withAlpha(70),
+      transitionDuration: new Duration(milliseconds: 400),
+      barrierDismissible: true,
+      barrierLabel: 'setting dialog barrier',
+      pageBuilder: (BuildContext con, Animation ani, Animation secAni){
+        return AlertDialog(
+          elevation: 10,
+          //backgroundColor: Colors.yellow,
+         // contentPadding: EdgeInsets.zero,
+          // content: Container(
+          //   width: MediaQuery.of(context).size.width*0.4,
+          //   child: LoginPage(),
+          // )
+          content: Container(
+            width: MediaQuery.of(context).size.width*0.3,
+            child: SettingPage(),
+          )
+        );
+      }
+
+    );
+  }
 
 
 }

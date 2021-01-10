@@ -29,7 +29,7 @@ class PostPageState extends State<PostPage>{
   List<String> comments =List<String>();
 
   Map<int,PostImage> map = Map<int,PostImage>();
-
+  //이미지를 tab했을 때 photoview의 child로 쓰기 위해
   Image currentImage;
 
   Future<String> fetchPost(PostProvider postProvider) async{
@@ -186,8 +186,6 @@ class PostPageState extends State<PostPage>{
             ),
             //loop: false,
             onTap: (index){
-              print("onTap : "+index.toString());
-              print('1111111111111111111111111');
               showImageDialog();
             },
             onIndexChanged: (index){
@@ -209,36 +207,6 @@ class PostPageState extends State<PostPage>{
     );
   }
 
-  showImageDialog(){
-    return showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierColor: Colors.pink[500].withAlpha(30),
-      barrierLabel: "ff" ,
-      transitionDuration: new Duration(milliseconds: 300),
-      
-      pageBuilder: (BuildContext con, Animation ani, Animation secAni){
-        
-        return AlertDialog(
-          elevation: 10,
-       
-          contentPadding: EdgeInsets.zero,
-          content: 
-          Container(
-            width: MediaQuery.of(context).size.width*0.6,
-            child: PhotoView(
-              imageProvider: currentImage.image,
-            ),
-          )
-        );
-      }
-
-    );
-  }
-  
-
-
-
   Widget buildComment(PostProvider postProvider){
     commentController.text=postProvider.getSelectedPost().postExplain;
 
@@ -259,6 +227,28 @@ class PostPageState extends State<PostPage>{
 
 
       ],
+    );
+  }
+
+  showImageDialog(){
+    return showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.pink[500].withAlpha(30),
+      barrierLabel: "ff" ,
+      transitionDuration: new Duration(milliseconds: 300),     
+      pageBuilder: (BuildContext con, Animation ani, Animation secAni){      
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: 
+          Container(
+            width: MediaQuery.of(context).size.width*0.6,
+            child: PhotoView(
+              imageProvider: currentImage.image,
+            ),
+          )
+        );
+      }
     );
   }
 

@@ -22,55 +22,20 @@ class NavigationBarState extends State<NavigationBar>{
   @override
   Widget build(BuildContext context) {
     UserLogin userLogin = Provider.of<UserLogin>(context);
-    if(userLogin.getIsLogin()==false){
-      setWidgets(userLogin);
-    }
-    else{
-      setWidgets(userLogin);
-    }
+    buildWidgets(userLogin);
 
     return Container(
       height : 100,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.end,
-        children: widgets,
-        // children: [
-        //   Expanded(
-        //     flex: 1,
-        //     child: Container(
-        //       margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-        //       child: Text("logo"),
-        //     )
-        //   ),
-        //   NavigationItem(
-        //     title: "home",
-        //     routeName : routeHome,
-        //     selected:index==0,
-        //     onHighlight:onHighlight,
-        //   ),
-        //   NavigationItem(
-        //     title: "About",
-        //     routeName: routeAbout,
-        //     selected:index==1,
-        //     onHighlight:onHighlight,
-        //   ),
-        //   RaisedButton(
-        //     child:Text(login + userLogin.getIsLoin().toString()),
-        //     padding : const EdgeInsets.symmetric(horizontal: 40),
-        //     color: Colors.greenAccent,     
-        //     onPressed: (){
-        //       showLoginDialog(navKey.currentContext,userLogin);
-        //     },
-        //   ),
-        // ],
-        
+        children: widgets,        
       )
     );
     
   }
 
-  Future<void> showLoginDialog(BuildContext context, UserLogin userLogin){
+  showLoginDialog(BuildContext context, UserLogin userLogin){
     return showGeneralDialog(
       context: context,
       barrierColor: Colors.blue.withAlpha(70),
@@ -117,19 +82,22 @@ class NavigationBarState extends State<NavigationBar>{
   }
 
 
-  setWidgets(UserLogin userLogin){
-
-    if(userLogin.getIsLogin() == false){
+  buildWidgets(UserLogin userLogin){
+    if(userLogin.getMe() == null){
       widgets = <Widget>[
         Expanded(
             flex: 1,
             child: Container(
               margin: EdgeInsets.fromLTRB(30, 0, 10, 0),
-              child:Text('PHOTOFOLIO',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w400
-                ),
+              // child:Text('PHOTOFOLIO',
+              //   style: TextStyle(
+              //     fontSize: 30,
+              //     fontWeight: FontWeight.w400
+              //   ),
+              // ),
+              child: SizedBox(
+                height: 50,
+                child: Image(image: AssetImage('logo.png'),fit: BoxFit.scaleDown,alignment: Alignment.centerLeft,),
               ),
             )
           ),
@@ -155,14 +123,6 @@ class NavigationBarState extends State<NavigationBar>{
             },
           ),
           Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 0),)
-          // RaisedButton(
-          //   child:Text(login + userLogin.getIsLogin().toString()),
-          //   padding : const EdgeInsets.symmetric(horizontal: 40),
-          //   color: Colors.greenAccent,     
-          //   onPressed: (){
-          //     showLoginDialog(navKey.currentContext,userLogin);
-          //   },
-          // ),
 
       ];
 

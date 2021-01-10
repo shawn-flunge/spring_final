@@ -23,8 +23,8 @@ class SettingPageState extends State<SettingPage>{
 
   @override
   Widget build(BuildContext context) {
-    UserLogin userLogin = Provider.of<UserLogin>(context);
-    print(userLogin.getMe().imgPath.toString());
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+    print(userProvider.getMe().imgPath.toString());
     return Container(
 
       child: Column(
@@ -49,7 +49,7 @@ class SettingPageState extends State<SettingPage>{
                   setState(() {
                     str = profileFile.name;
                   });
-                  setProfile(0,userLogin);
+                  setProfile(0,userProvider);
                 }
                 else{
                   print('file is not img');
@@ -63,7 +63,7 @@ class SettingPageState extends State<SettingPage>{
           FlatButton(
             child: Text('소개글 수정'),
             onPressed: () {
-              showIntroDialog(context, userLogin);
+              showIntroDialog(context, userProvider);
             },
           ),
         ],
@@ -72,7 +72,7 @@ class SettingPageState extends State<SettingPage>{
     
   }
 
-  setProfile(int type, UserLogin userLogin) async{
+  setProfile(int type, UserProvider userProvider) async{
     FormData formData;
     Dio dio = Dio();
 
@@ -86,24 +86,24 @@ class SettingPageState extends State<SettingPage>{
       );
 
       formData = FormData.fromMap({
-        'nickname' : userLogin.getMe().nickname,
+        'nickname' : userProvider.getMe().nickname,
         'multipartfile' : multipartFile,
       });
       var response = await dio.post(baseUrl+'/profile/image', data: formData,);
 
       if(response.statusCode ==200){
-        userLogin.login(userLogin.getMe().eMail, userLogin.getMe().password);
+        userProvider.login(userProvider.getMe().eMail, userProvider.getMe().password);
       } 
     }else if(type ==1){
       
       formData = FormData.fromMap({
-        'nickname' : userLogin.getMe().nickname,
+        'nickname' : userProvider.getMe().nickname,
         'info' : introTextController.text
       });
       var response = await dio.post(baseUrl+'/profile/info', data: formData,);
 
       if(response.statusCode ==200){
-        userLogin.login(userLogin.getMe().eMail, userLogin.getMe().password);
+        userProvider.login(userProvider.getMe().eMail, userProvider.getMe().password);
       }
     }
     
@@ -111,7 +111,7 @@ class SettingPageState extends State<SettingPage>{
     
   }
 
-  showIntroDialog(BuildContext context,UserLogin userLogin){
+  showIntroDialog(BuildContext context,UserProvider userProvider){
     showDialog<void>(
       context: context,
       builder: (context){
@@ -120,7 +120,7 @@ class SettingPageState extends State<SettingPage>{
             RaisedButton(
               child: Text('확인'),
               onPressed: (){
-                setProfile(1,userLogin);
+                setProfile(1,userProvider);
                 Navigator.of(context).pop();
               },
             ),

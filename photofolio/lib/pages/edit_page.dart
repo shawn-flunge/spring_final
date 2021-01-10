@@ -46,7 +46,7 @@ class EditPageState extends State<EditPage>{
 
   @override
   Widget build(BuildContext context) {
-    UserLogin userLogin = Provider.of<UserLogin>(context);
+    UserProvider userProvider = Provider.of<UserProvider>(context);
 
     return SingleChildScrollView(
 
@@ -92,7 +92,7 @@ class EditPageState extends State<EditPage>{
           ),
           Container(
             padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
-            child: buildSubmitBtn(userLogin),
+            child: buildSubmitBtn(userProvider),
           )
           // Flexible(
           //   flex: 1,
@@ -292,7 +292,7 @@ class EditPageState extends State<EditPage>{
     );
   }
   
-  Widget buildSubmitBtn(UserLogin userLogin) {
+  Widget buildSubmitBtn(UserProvider userProvider) {
     //print(idTextBoxController.text.toString());
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25),
@@ -300,7 +300,7 @@ class EditPageState extends State<EditPage>{
       child: RaisedButton(
         elevation: 5,
         onPressed: () {
-          posting(userLogin.getMe().nickname);
+          posting(userProvider.getMe().nickname);
           Navigator.of(context).pop();
         },
         padding: EdgeInsets.all(15),

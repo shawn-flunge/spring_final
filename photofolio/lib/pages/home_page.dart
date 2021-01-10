@@ -71,9 +71,9 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context){
-    UserLogin userLogin = Provider.of<UserLogin>(context);
+    UserProvider userProvider = Provider.of<UserProvider>(context);
     PostProvider postProvider = Provider.of<PostProvider>(context);
-    //postProvider.fetchPost();
+    userProvider.setFreindNull();
 
     // Future<List<Post>> postss = postProvider.posts;
     if(MediaQuery.of(context).size.width>800)

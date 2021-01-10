@@ -21,8 +21,8 @@ class NavigationBarState extends State<NavigationBar>{
 
   @override
   Widget build(BuildContext context) {
-    UserLogin userLogin = Provider.of<UserLogin>(context);
-    buildWidgets(userLogin);
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+    buildWidgets(userProvider);
 
     return Container(
       height : 100,
@@ -35,7 +35,7 @@ class NavigationBarState extends State<NavigationBar>{
     
   }
 
-  showLoginDialog(BuildContext context, UserLogin userLogin){
+  showLoginDialog(BuildContext context, UserProvider userProvider){
     return showGeneralDialog(
       context: context,
       barrierColor: Colors.blue.withAlpha(70),
@@ -52,7 +52,7 @@ class NavigationBarState extends State<NavigationBar>{
             //width: MediaQuery.of(context).size.width*0.4,
             child: Column(
               children: [
-                LoginPage(userLogin)
+                LoginPage(userProvider)
               ],
             ),
           ),
@@ -82,8 +82,8 @@ class NavigationBarState extends State<NavigationBar>{
   }
 
 
-  buildWidgets(UserLogin userLogin){
-    if(userLogin.getMe() == null){
+  buildWidgets(UserProvider userProvider){
+    if(userProvider.getMe() == null){
       widgets = <Widget>[
         Expanded(
             flex: 1,
@@ -119,7 +119,7 @@ class NavigationBarState extends State<NavigationBar>{
             ),
             color: Colors.grey[300],
             onPressed: (){
-              showLoginDialog(navKey.currentContext,userLogin);
+              showLoginDialog(navKey.currentContext,userProvider);
             },
           ),
           Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 0),)
@@ -145,7 +145,7 @@ class NavigationBarState extends State<NavigationBar>{
             onHighlight:onHighlight,
           ),
           NavigationItem(
-            title: userLogin.getMe().nickname,
+            title: userProvider.getMe().nickname,
             routeName: routeAbout,
             selected:index==1,
             onHighlight:onHighlight,

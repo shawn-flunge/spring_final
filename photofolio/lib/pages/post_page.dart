@@ -5,7 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:photofolio/pages/visit_page.dart';
 import 'package:photofolio/provider/post_provider.dart';
+import 'package:photofolio/provider/user_provider.dart';
 import 'package:photofolio/routes/routes.dart';
 import 'package:photofolio/store/PostImage.dart';
 import 'package:provider/provider.dart';
@@ -44,20 +46,13 @@ class PostPageState extends State<PostPage>{
     if(response.statusCode == 200){
       var data = response.data as Map<String, dynamic>;
 
-      print(data.toString());
-      print(data.runtimeType);
       map = Map<int,PostImage>();
       data.forEach((key, value) {
         map[int.parse(key)] = PostImage(value['img'],value['comment']);
         var imgPath = imageUrl+'/' + value['img'].toString().split('/')[9];
         imgs.add(Image.network(imgPath));
         comments.add(value['comment']);
-        print(key + '////' + value['comment']);
       });
-      print(comments.length);
-      for(int i=0; i<comments.length;i++){
-        print(comments[i].toString()+'@@@@@@@@@@@@');
-      }
 
     }
     return "ok";
@@ -67,7 +62,7 @@ class PostPageState extends State<PostPage>{
   @override
   Widget build(BuildContext context) {
     PostProvider postProvider = Provider.of<PostProvider>(context);
-    print(postProvider.getSelectedPost().toString() + "@@@@@@@@@@@@@@@@@");
+    UserProvider userProvider = Provider.of<UserProvider>(context);
 
     return FutureBuilder(
       future: fetchPost(postProvider),
@@ -94,7 +89,7 @@ class PostPageState extends State<PostPage>{
                   //color: Colors.deepPurple,
                   margin: EdgeInsets.all(20),
                   width: double.infinity,
-                  child: buildTitle(postProvider),
+                  child: buildTitle(postProvider,userProvider),
                 ),
                 Container(
                   //color: Colors.indigo,
@@ -118,7 +113,7 @@ class PostPageState extends State<PostPage>{
 
   }
 
-  Widget buildTitle(PostProvider postProvider){
+  Widget buildTitle(PostProvider postProvider, UserProvider userProvider){
     return Column(
       //mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,14 +132,16 @@ class PostPageState extends State<PostPage>{
               TextButton(
                 child: Text(postProvider.getSelectedPost().userNickname,
                   style: TextStyle(
-                    fontSize: 20
+                    fontSize: 20,
+                    color: Colors.indigo
                   ),  
                 ),    
                 autofocus: false,
                 clipBehavior: Clip.none,
                 onPressed: (){
-                  print('asg');
-                  Navigator.of(context).pushNamed(routeAbout);
+                  userProvider.visitAbout(postProvider.getSelectedPost().userNickname);
+                  // Navigator.of(context).pushNamed(routeAbout);
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>VisitPage()));
                 },
               )
             ],

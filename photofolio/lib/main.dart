@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         // primarySwatch: Colors.blue,
         primarySwatch: MaterialColor(0xFF212121, color),
-        visualDensity: VisualDensity.adaptivePlatformDensity
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       builder: (_,child) => AppView(child: child),
       initialRoute: routeHome,

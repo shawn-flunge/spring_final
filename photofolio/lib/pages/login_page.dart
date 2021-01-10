@@ -8,16 +8,16 @@ import 'package:photofolio/pages/signup_page.dart';
 import 'package:photofolio/provider/user_provider.dart';
 
 class LoginPage extends StatefulWidget{
-  UserLogin userLogin;
-  LoginPage(this.userLogin);
-  LoginPageState createState() => LoginPageState(userLogin);  
+  UserProvider userProvider;
+  LoginPage(this.userProvider);
+  LoginPageState createState() => LoginPageState(userProvider);  
 }
 
 
 class LoginPageState extends State<LoginPage>{
 
-  UserLogin userLogin;
-  LoginPageState(this.userLogin);
+  UserProvider userProvider;
+  LoginPageState(this.userProvider);
 
   TextEditingController idTextBoxController;
   TextEditingController pwdTextBoxController;
@@ -165,16 +165,14 @@ class LoginPageState extends State<LoginPage>{
       child: RaisedButton(
         elevation: 5,
         onPressed: () async {
-          await userLogin.login(idTextBoxController.text.toString(), pwdTextBoxController.text.toString());
+          await userProvider.login(idTextBoxController.text.toString(), pwdTextBoxController.text.toString());
 
-          if(!userLogin.getIsLogin()){
-            print('@@@@@@@@@@@@@@@@@@failed@@@@@@@@@@@@@@@@@@@@@@@@@');
+          if(userProvider.getMe()==null){
             showErrorDialog(context,'이메일 혹은 비밀번호를 확인하세요');
-          }
-          else{
-            print(userLogin.getIsLogin().toString()+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+          }else{
             Navigator.of(context).pop();
           }
+
         },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),

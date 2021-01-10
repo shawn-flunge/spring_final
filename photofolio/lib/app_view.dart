@@ -16,7 +16,7 @@ class AppView extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserLogin>(create:(context)=> UserLogin()),
+        ChangeNotifierProvider<UserProvider>(create:(context)=> UserProvider()),
         ChangeNotifierProvider<PostProvider>(create:(context)=>PostProvider())
       ],
       child: Scaffold(

@@ -31,9 +31,12 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
   TextEditingController introduceController;
   QuillController quillController = QuillController.basic();
   
-
   List<String> ss = ['ff','gg','ewerqrq','vvv','zzz','qqq','tt'];
   List<ActionChip> chips = List<ActionChip>();
+
+  String nickname;
+  String imgPath;
+  String infoText;
   
   Future<List<Post>> fetchActivity(String nickname) async{
     print('start fetch');
@@ -72,6 +75,26 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
     tabController= TabController(length: 3,vsync: this);
   }
 
+  checkVisiting(UserProvider userProvider){
+    if(userProvider.getMe() == null){
+      //로그인 x
+      nickname = userProvider.getFreind().nickname;
+      imgPath = userProvider.getFreind().imgPath;
+      infoText = userProvider.getFreind().infoText; 
+    }else if(userProvider.getFreind() == null){
+      //로그인 o and 방문x
+      nickname = userProvider.getMe().nickname;
+      imgPath = userProvider.getMe().imgPath;
+      infoText = userProvider.getMe().infoText;    
+    }
+    else{
+      //로그인 o and 방문o,
+      nickname = userProvider.getFreind().nickname;
+      imgPath = userProvider.getFreind().imgPath;
+      infoText = userProvider.getFreind().infoText; 
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -87,14 +110,16 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
     //   );
     // }
 
-    UserLogin userLogin = Provider.of<UserLogin>(context);
+    UserProvider userProvider = Provider.of<UserProvider>(context);
     PostProvider postProvider = Provider.of<PostProvider>(context);
 
+    
+    checkVisiting(userProvider);
     return SingleChildScrollView(
 
       child: Column(
         children: [
-          buildUserInfoSection(context,userLogin),
+          buildUserInfoSection(context,userProvider),
           const Divider(
             color: Colors.black38,
             height: 30,
@@ -113,9 +138,9 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
             margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
             // child: buildUserActivitySection(userLogin, postProvider),
             child: FutureBuilder<List<Post>>(
-              future: fetchActivity(userLogin.getMe().nickname),
+              future: fetchActivity(userProvider.getMe().nickname),
               builder: (context, snapshot){
-                return snapshot.hasData ? buildUserActivitySection(userLogin,postProvider,snapshot.data) : Text('ff');
+                return snapshot.hasData ? buildUserActivitySection(userProvider,postProvider,snapshot.data) : Text('ff');
               },
             ),
           )
@@ -129,7 +154,7 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
   }
 
 
-  Widget buildUserInfoSection(BuildContext context, UserLogin userLogin) {
+  Widget buildUserInfoSection(BuildContext context, UserProvider userLogin) {
     return Container(
       margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
       color: Colors.grey[100],
@@ -218,7 +243,7 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
     );
   }
 
-  Widget buildUserActivitySection(UserLogin userLogin, PostProvider postProvider, List<Post> posts){
+  Widget buildUserActivitySection(UserProvider userLogin, PostProvider postProvider, List<Post> posts){
     return Container(
       height: 1000,
       child:Directionality(
@@ -241,12 +266,6 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
                   buildGrid(posts,postProvider),
                   Text('Story service comes soon'),
                   Text('Me service comes soon'),
-                  // RaisedButton(
-                  //   child: Text('edit'),
-                  //   onPressed: () {
-                  //     showRichEditorDialog(context);
-                  //   },
-                  // )
                 ],
                 controller: tabController,
               ),

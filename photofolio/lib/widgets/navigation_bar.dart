@@ -96,7 +96,7 @@ class NavigationBarState extends State<NavigationBar>{
               //   ),
               // ),
               child: SizedBox(
-                height: 50,
+                height: 30,
                 child: Image(image: AssetImage('logo.png'),fit: BoxFit.scaleDown,alignment: Alignment.centerLeft,),
               ),
             )
@@ -129,14 +129,12 @@ class NavigationBarState extends State<NavigationBar>{
     }else{
       widgets = <Widget>[
         Expanded(
-            flex: 1,
+            flex: 1,           
             child: Container(
               margin: EdgeInsets.fromLTRB(30, 0, 10, 0),
-              child:Text('PHOTOFOLIO',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w400
-                ),
+              child: SizedBox(
+                height: 30,
+                child: Image(image: AssetImage('logo.png'),fit: BoxFit.scaleDown,alignment: Alignment.centerLeft,),
               ),
             )
           ),

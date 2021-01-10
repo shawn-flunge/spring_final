@@ -10,6 +10,7 @@ import 'package:photofolio/routes/routes.dart';
 import 'package:photofolio/store/PostImage.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:photo_view/photo_view.dart';
 
 class PostPage extends StatefulWidget{
 
@@ -24,11 +25,12 @@ class PostPageState extends State<PostPage>{
   Image img = Image.network('https://picsum.photos/250?image=9');
   Image img2 = Image.network('https://picsum.photos/250?image=9');
 
-
   List<Image> imgs = List<Image>();
   List<String> comments =List<String>();
 
   Map<int,PostImage> map = Map<int,PostImage>();
+
+  Image currentImage;
 
   Future<String> fetchPost(PostProvider postProvider) async{
     print('searching post image');
@@ -114,9 +116,6 @@ class PostPageState extends State<PostPage>{
       },
     );
 
-
-    
-
   }
 
   Widget buildTitle(PostProvider postProvider){
@@ -157,8 +156,12 @@ class PostPageState extends State<PostPage>{
     );
   }
 
+
+  
+
   Widget buildImageRow(PostProvider postProvider){
     imgTextController.text = comments[0];
+    currentImage=imgs[0];
     return Row(
       // crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -182,11 +185,14 @@ class PostPageState extends State<PostPage>{
               disableColor: Colors.green,
             ),
             //loop: false,
-            onTap: (int index){
+            onTap: (index){
               print("onTap : "+index.toString());
+              print('1111111111111111111111111');
+              showImageDialog();
             },
             onIndexChanged: (index){
              imgTextController.text = comments[index];
+             currentImage=imgs[index];
             },
           ),
         ),
@@ -203,6 +209,36 @@ class PostPageState extends State<PostPage>{
     );
   }
 
+  showImageDialog(){
+    return showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.pink[500].withAlpha(30),
+      barrierLabel: "ff" ,
+      transitionDuration: new Duration(milliseconds: 300),
+      
+      pageBuilder: (BuildContext con, Animation ani, Animation secAni){
+        
+        return AlertDialog(
+          elevation: 10,
+       
+          contentPadding: EdgeInsets.zero,
+          content: 
+          Container(
+            width: MediaQuery.of(context).size.width*0.6,
+            child: PhotoView(
+              imageProvider: currentImage.image,
+            ),
+          )
+        );
+      }
+
+    );
+  }
+  
+
+
+
   Widget buildComment(PostProvider postProvider){
     commentController.text=postProvider.getSelectedPost().postExplain;
 
@@ -217,7 +253,7 @@ class PostPageState extends State<PostPage>{
         ),
         InkWell(
           child: Text(postProvider.getSelectedPost().postLink),
-          onTap: () => launch('https://github.com/shawn-flunge'),
+          onTap: () => launch(postProvider.getSelectedPost().postLink),
         ),
         Padding(padding: EdgeInsets.all(50),)
 

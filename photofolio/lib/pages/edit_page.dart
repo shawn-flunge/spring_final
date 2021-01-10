@@ -205,11 +205,9 @@ class EditPageState extends State<EditPage>{
                       type: FileType.custom,
                       allowedExtensions: ['jpg','png','jpeg' ],
                     );
-
                     if(result != null) {
                       PlatformFile file = result.files.first;
                       
-
                       if(file.extension == 'jpg' || file.extension == 'png' || file.extension == 'jpeg' )
                       {
                         print(file.name);
@@ -329,7 +327,6 @@ class EditPageState extends State<EditPage>{
     //List<String> imageExplain = List<String>();
     String uri = "https://rest-api-server-axfra.run.goorm.io/api/posting";
 
-    print(nickname+">>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     //사용자가 선택한 파일들을 byte로 바꿔서 MultipartFile형식으로 변환
     for(var imgs in files){
       List<int> imageData = imgs.bytes;
@@ -342,7 +339,6 @@ class EditPageState extends State<EditPage>{
       imageList.add(multipartFile);
       //imageList[multipartFile] = commentsMap[imgs.name];
     }
-    print("Number of pictures:${imageList.length}");
     
     //사용자가 작성한 이미지에 대한 설명을 list에 옮김
     commentsMap.forEach((key, value) {

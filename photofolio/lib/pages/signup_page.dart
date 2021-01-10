@@ -59,15 +59,12 @@ class SignUpPageState extends State<SignUpPage> {
           ]
         ),
         child: Row(
-          //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Form(
               key: formKey,
               child: inputColumn(context),
             ),
             buildImage(),
-            //inputColumn(context)
-            //buildId(context)
             
           ],
         ),
@@ -319,15 +316,6 @@ class SignUpPageState extends State<SignUpPage> {
   }
 
   Widget buildImage(){
-
-    // return Container(
-    //   width: mediaQueryWidth*0.2,
-    //   color: Colors.blue,
-    //   child: Image(
-    //     image: ,
-    //   ),
-    // );
-
     return SizedBox(
       width: mediaQueryWidth*0.3,
       child: Image.asset('assets/signup_img.jpg'),

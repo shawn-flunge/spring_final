@@ -139,9 +139,9 @@ class PostPageState extends State<PostPage>{
                 autofocus: false,
                 clipBehavior: Clip.none,
                 onPressed: (){
-                  userProvider.visitAbout(postProvider.getSelectedPost().userNickname);
-                  // Navigator.of(context).pushNamed(routeAbout);
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>VisitPage()));
+                  print(postProvider.getSelectedPost().userNickname);
+                  userProvider.visitAbout(postProvider.getSelectedPost().userNickname)
+                    .then((value) => Navigator.push(context, MaterialPageRoute(builder: (context)=>VisitPage())));
                 },
               )
             ],

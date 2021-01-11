@@ -73,9 +73,7 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context){
     UserProvider userProvider = Provider.of<UserProvider>(context);
     PostProvider postProvider = Provider.of<PostProvider>(context);
-    userProvider.setFreindNull();
-
-    // Future<List<Post>> postss = postProvider.posts;
+    
     if(MediaQuery.of(context).size.width>800)
       crossAxisCount =3;
     else

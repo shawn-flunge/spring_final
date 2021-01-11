@@ -75,26 +75,6 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
     tabController= TabController(length: 3,vsync: this);
   }
 
-  checkVisiting(UserProvider userProvider){
-    if(userProvider.getMe() == null){
-      //로그인 x
-      nickname = userProvider.getFreind().nickname;
-      imgPath = userProvider.getFreind().imgPath;
-      infoText = userProvider.getFreind().infoText; 
-    }else if(userProvider.getFreind() == null){
-      //로그인 o and 방문x
-      nickname = userProvider.getMe().nickname;
-      imgPath = userProvider.getMe().imgPath;
-      infoText = userProvider.getMe().infoText;    
-    }
-    else{
-      //로그인 o and 방문o,
-      nickname = userProvider.getFreind().nickname;
-      imgPath = userProvider.getFreind().imgPath;
-      infoText = userProvider.getFreind().infoText; 
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -113,8 +93,6 @@ class AboutPageState extends State<AboutPage> with TickerProviderStateMixin{
     UserProvider userProvider = Provider.of<UserProvider>(context);
     PostProvider postProvider = Provider.of<PostProvider>(context);
 
-    
-    checkVisiting(userProvider);
     return SingleChildScrollView(
 
       child: Column(

@@ -12,11 +12,11 @@ class UserProvider with ChangeNotifier {
   User _friend;
 
   User getMe()=>_me;
-  User getFreind()=>_friend;
-  void setFreindNull() => _friend = null;
+  User getFriend()=>_friend;
   
-  void visitAbout(String nickname) async{
-
+  Future<void> visitAbout(String nickname) async{
+    _friend = null;
+    print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^strat visitAbout');
     Map<String,dynamic> map;
     Dio dio = Dio();
     FormData formData = FormData.fromMap({
@@ -24,12 +24,32 @@ class UserProvider with ChangeNotifier {
     });
 
     final response = await dio.post(baseUrl+'/visit',data: formData);
-
+    print(response.statusCode);
     if(response.statusCode ==200)
     {
       var data = response.data;
       map=Map.castFrom(data);
-      _friend=User.fromJson(map);
+      var realThumbnail;
+
+      if(map['imgPath'] == null){
+        realThumbnail = 'https://rest-api-server-axfra.run.goorm.io/static/images/default.png';
+      } 
+      else{
+        var thumbnail = map['imgPath'].toString().split('/');
+        realThumbnail = imageUrl+'/' + thumbnail[9];
+      }
+
+      if(map['infoText'] == null)
+        map['infoText']='';
+
+      _friend= User(
+        eMail: map['email'],
+        password: map['password'],
+        nickname: map['nickname'],
+        imgPath: realThumbnail,
+        infoText: map['infoText']
+      );
+      print(_friend.imgPath);
     }
 
     notifyListeners();

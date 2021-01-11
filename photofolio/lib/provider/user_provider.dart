@@ -55,7 +55,7 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void login(String email, String pwd) async{
+  Future<void> login(String email, String pwd) async{
     final res=await http.post(baseUrl+"/login",
       body:json.encode({'eMail':email,'password':pwd}),
       headers: {'Content-Type':'application/json'}

@@ -59,40 +59,46 @@ class PostPageState extends State<PostPage>{
   }
 
 
+
   @override
   Widget build(BuildContext context) {
     PostProvider postProvider = Provider.of<PostProvider>(context);
     UserProvider userProvider = Provider.of<UserProvider>(context);
 
+    if(MediaQuery.of(context).size.width>630){
+      print('ff');
+    }
+    else{
+      print('ff');
+    }
     return FutureBuilder(
       future: fetchPost(postProvider),
       builder: (context, snapshot){
         if(snapshot.hasData == false)
-          return Text('false');
+          return Container(
+            alignment: Alignment.center,
+            width: 300,
+            height: 300,
+            child: CircularProgressIndicator(),
+          );
         else if(snapshot.hasError){
-          return Text('error : ' +snapshot.error);
+          return Container(
+            alignment: Alignment.center,
+            width: 300,
+            height: 300,
+            child: CircularProgressIndicator(),
+          );
         }
         else{
           return SingleChildScrollView(
             child: Column(
               children: [
-                //buildImageRow(),
-                // Align(
-                //   child: IconButton(
-                //       iconSize: 20,
-                //       icon: Icon(Icons.cancel_outlined,),
-                //       onPressed: () => Navigator.of(context).pop(),
-                //   ), 
-                //   alignment: FractionalOffset(1, 0),
-                // ),
                 Container(
-                  //color: Colors.deepPurple,
                   margin: EdgeInsets.all(20),
                   width: double.infinity,
                   child: buildTitle(postProvider,userProvider),
                 ),
                 Container(
-                  //color: Colors.indigo,
                   width: double.infinity,
                   height: 500,
                   child: buildImageRow(postProvider),
@@ -106,12 +112,37 @@ class PostPageState extends State<PostPage>{
               ],
             ),
           );
-        }
-         
+        }   
       },
     );
 
   }
+
+  Widget buildMain(PostProvider postProvider, UserProvider userProvider){
+    SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.all(20),
+            width: double.infinity,
+            child: buildTitle(postProvider,userProvider),
+          ),
+          Container(
+            width: double.infinity,
+            height: 500,
+            child: buildImageRow(postProvider),
+          ),
+          Container(
+            margin: EdgeInsets.all(20),
+            width: double.infinity,
+            child: buildComment(postProvider),
+          )
+
+        ],
+      ),
+    );
+  }
+
 
   Widget buildTitle(PostProvider postProvider, UserProvider userProvider){
     return Column(

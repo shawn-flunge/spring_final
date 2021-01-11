@@ -1,5 +1,7 @@
 
-import 'dart:convert';
+
+
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +76,8 @@ class HomePageState extends State<HomePage> {
     UserProvider userProvider = Provider.of<UserProvider>(context);
     PostProvider postProvider = Provider.of<PostProvider>(context);
     
+    print(MediaQuery.of(context).size.width);
+
     if(MediaQuery.of(context).size.width>800)
       crossAxisCount =3;
     else
@@ -93,8 +97,7 @@ class HomePageState extends State<HomePage> {
               child: FutureBuilder<List<Post>>(
                 future: fetchPost(),
                 builder: (context, snapshot){
-                  return snapshot.hasData ? buildGrid(snapshot.data,context,postProvider) : Text('ff');
-                  // return buildGrid(snapshot.data,context);
+                  return snapshot.hasData ? buildGrid(snapshot.data,context,postProvider) : CircularProgressIndicator();
                 },
               ),
             ),
@@ -154,30 +157,37 @@ class HomePageState extends State<HomePage> {
         onTap: (){
           print(post.id.toString() + "###################");
           postProvider.selectPost(post);
-          showPostDialog(context);
+          // showPostDialog(context);
+          if(MediaQuery.of(context).size.width>710){
+            showPostDialog(context);
+          }
+          else{
+            Navigator.pushNamed(context, routePost);
+          }
         },
       ),
     );
 
   }
 
-  Future<void> showPostDialog(BuildContext context){
+  showPostDialog(BuildContext context){
     return showGeneralDialog(
       context: context,
       barrierDismissible: true,
       barrierColor: Colors.pink[500].withAlpha(30),
-      barrierLabel: "ff" ,
+      barrierLabel: "show post page dialog" ,
       transitionDuration: new Duration(seconds: 1),
       
       pageBuilder: (BuildContext con, Animation ani, Animation secAni){
         
         return AlertDialog(
           elevation: 10,
-       
+
           contentPadding: EdgeInsets.zero,
           content: 
           Container(
-            width: MediaQuery.of(context).size.width*0.6,
+            // width: MediaQuery.of(context).size.width*0.6,
+            width: 700,
             child: PostPage(),
           )
         );

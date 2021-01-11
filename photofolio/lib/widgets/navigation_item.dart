@@ -1,6 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:photofolio/pages/login_page.dart';
 import 'package:photofolio/widgets/interactive_nav_item.dart';
 import 'package:photofolio/routes/routes.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:photofolio/provider/user_provider.dart';
 
 
 class NavigationItem extends StatelessWidget{
@@ -10,6 +14,7 @@ class NavigationItem extends StatelessWidget{
   final bool selected;
   final Function onHighlight;
   
+
   const NavigationItem({
     @required this.title,
     @required this.routeName,
@@ -19,13 +24,28 @@ class NavigationItem extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    EdgeInsets padding;
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+
+    if(MediaQuery.of(context).size.width>500){
+      padding=EdgeInsets.symmetric(horizontal: 50);
+    }else{
+      padding=EdgeInsets.symmetric(horizontal: 10);
+    }
+
     return GestureDetector(
       onTap : () {
-        navKey.currentState.pushNamed(routeName);
-        onHighlight(routeName);
+        if(title == 'Login'){
+          showLoginDialog(navKey.currentContext,userProvider);
+        }
+        else{
+          navKey.currentState.pushNamed(routeName);
+          onHighlight(routeName);
+        }
+        
       },
       child: Padding(
-        padding : const EdgeInsets.symmetric(horizontal: 50),
+        padding : padding,
         child: InteractiveNavItem(
           text: title,
           routeName:routeName,
@@ -34,5 +54,34 @@ class NavigationItem extends StatelessWidget{
       )
     );
   }
+
+  showLoginDialog(BuildContext context, UserProvider userProvider){
+    return showGeneralDialog(
+      context: context,
+      barrierColor: Colors.blue.withAlpha(70),
+      barrierDismissible: true,
+      barrierLabel: 'login dialog',
+      transitionDuration: new Duration(milliseconds: 400),
+      pageBuilder: (BuildContext con, Animation ani, Animation secAni){
+        return AlertDialog(
+          elevation: 10,
+          content: Container(
+            width: MediaQuery.of(context).size.width*0.3,
+            child: SingleChildScrollView(
+            padding: EdgeInsets.zero,
+            //width: MediaQuery.of(context).size.width*0.4,
+            child: Column(
+              children: [
+                LoginPage(userProvider)
+              ],
+            ),
+          ),
+          )
+        );
+      }
+
+    );
+  }
+
 
 }

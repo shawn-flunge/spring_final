@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:photofolio/pages/signup_page.dart';
 import 'package:photofolio/provider/user_provider.dart';
+import 'package:photofolio/routes/routes.dart';
 
 class LoginPage extends StatefulWidget{
   UserProvider userProvider;
@@ -22,6 +23,8 @@ class LoginPageState extends State<LoginPage>{
   TextEditingController idTextBoxController;
   TextEditingController pwdTextBoxController;
 
+  double marginWidth;
+  
   @override
   void initState() {
     // TODO: implement initState
@@ -29,12 +32,20 @@ class LoginPageState extends State<LoginPage>{
     pwdTextBoxController = TextEditingController();
   }
 
+  
 
   @override
   Widget build(BuildContext context) {
     
+    if(MediaQuery.of(context).size.width>500){
+      marginWidth = 60;
+    }
+    else{
+      marginWidth = 15;
+    }
+
     return Container(
-      margin: EdgeInsets.fromLTRB(60, 0, 60, 30),
+      margin: EdgeInsets.fromLTRB(marginWidth, 0, marginWidth, 30),
       child: Column(
         children: [
           
@@ -165,14 +176,16 @@ class LoginPageState extends State<LoginPage>{
       child: RaisedButton(
         elevation: 5,
         onPressed: () async {
-          await userProvider.login(idTextBoxController.text.toString(), pwdTextBoxController.text.toString());
-
-          if(userProvider.getMe()==null){
-            showErrorDialog(context,'이메일 혹은 비밀번호를 확인하세요');
-          }else{
-            Navigator.of(context).pop();
-          }
-
+          userProvider.login(idTextBoxController.text.toString(), pwdTextBoxController.text.toString())
+          .then((value) {
+            if(userProvider.getMe()==null){
+              showErrorDialog(context,'이메일 혹은 비밀번호를 확인하세요');
+            }else{
+              Navigator.pushNamed(context, routeHome);
+              // Navigator.of(context).pop();
+            }
+          });
+          
         },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -200,7 +213,7 @@ class LoginPageState extends State<LoginPage>{
   }
 
   showErrorDialog(BuildContext context,String str){
-    showDialog<void>(
+    showDialog(
       context: context,
       builder: (context){
         return AlertDialog(

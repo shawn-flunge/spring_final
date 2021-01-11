@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:photofolio/provider/user_provider.dart';
 import 'package:photofolio/routes/routes.dart';
@@ -22,16 +24,31 @@ class NavigationBarState extends State<NavigationBar>{
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
-    buildWidgets(userProvider);
+    //buildWidgets(userProvider);
 
-    return Container(
-      height : 100,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: widgets,        
-      )
-    );
+    if(MediaQuery.of(context).size.width>500){
+      buildWidgets(userProvider);
+      return Container(
+        height : 100,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: widgets,        
+        )
+      );
+    }else{
+      buildMobileWidget(userProvider);
+      return Container(
+        height : 100,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: widgets,        
+        )
+      );
+    }
+
+    
     
   }
 
@@ -107,20 +124,26 @@ class NavigationBarState extends State<NavigationBar>{
             selected:index==0,
             onHighlight:onHighlight,
           ),
-          FlatButton(
-            child: Text('Get Started',
-              style: TextStyle(
-                fontSize: 18
-              ),
-            ),
-            padding : EdgeInsets.fromLTRB(40, 20, 40, 20),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30)
-            ),
-            color: Colors.grey[300],
-            onPressed: (){
-              showLoginDialog(navKey.currentContext,userProvider);
-            },
+          // FlatButton(
+          //   child: Text('Get Started',
+          //     style: TextStyle(
+          //       fontSize: 18
+          //     ),
+          //   ),
+          //   padding : EdgeInsets.fromLTRB(40, 20, 40, 20),
+          //   shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.circular(30)
+          //   ),
+          //   color: Colors.grey[300],
+          //   onPressed: (){
+          //     showLoginDialog(navKey.currentContext,userProvider);
+          //   },
+          // ),
+          NavigationItem(
+            title: "Login",
+            routeName : 'Login',
+            selected:index==1,
+            onHighlight:onHighlight,
           ),
           Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 0),)
 
@@ -150,6 +173,7 @@ class NavigationBarState extends State<NavigationBar>{
             selected:index==1,
             onHighlight:onHighlight,
           ),
+          Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 0),)
           // RaisedButton(
           //   child:Text(login + userLogin.getIsLogin().toString()),
           //   padding : const EdgeInsets.symmetric(horizontal: 40),
@@ -163,6 +187,79 @@ class NavigationBarState extends State<NavigationBar>{
 
     }
 
+  }
+
+  buildMobileWidget(UserProvider userProvider){
+    if(userProvider.getMe() == null){
+      widgets = <Widget>[
+        Expanded(
+            flex: 1,
+            child: Container(
+              margin: EdgeInsets.fromLTRB(30, 0, 10, 0),
+              child: SizedBox(
+                height: 30,
+                child: Image(image: AssetImage('logo.png'),fit: BoxFit.scaleDown,alignment: Alignment.centerLeft,),
+              ),
+            )
+          ),
+          NavigationItem(
+            title: "Home",
+            routeName : routeHome,
+            selected:index==0,
+            onHighlight:onHighlight,
+          ),
+          // FlatButton(
+          //   child: Text('Get Started',
+          //     style: TextStyle(
+          //       fontSize: 16
+          //     ),
+          //   ),
+          //   padding : EdgeInsets.fromLTRB(20, 20, 20, 20),
+          //   shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.circular(30)
+          //   ),
+          //   color: Colors.grey[300],
+          //   onPressed: (){
+          //     showLoginDialog(navKey.currentContext,userProvider);
+          //   },
+          // ),
+          NavigationItem(
+            title: "Login",
+            routeName : 'Login',
+            selected:index==1,
+            onHighlight:onHighlight,
+          ),
+          //Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0),)
+
+      ];
+
+    }else{
+      widgets = <Widget>[
+        Expanded(
+            flex: 1,           
+            child: Container(
+              margin: EdgeInsets.fromLTRB(30, 0, 10, 0),
+              child: SizedBox(
+                height: 30,
+                child: Image(image: AssetImage('logo.png'),fit: BoxFit.scaleDown,alignment: Alignment.centerLeft,),
+              ),
+            )
+          ),
+          NavigationItem(
+            title: "Home",
+            routeName : routeHome,
+            selected:index==0,
+            onHighlight:onHighlight,
+          ),
+          NavigationItem(
+            title: userProvider.getMe().nickname,
+            routeName: routeAbout,
+            selected:index==1,
+            onHighlight:onHighlight,
+          ),
+      ];
+
+    }
   }
 
 

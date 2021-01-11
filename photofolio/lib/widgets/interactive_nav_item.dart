@@ -51,10 +51,14 @@ class InteractiveTextState extends State<InteractiveText>{
 
   bool _hovering = false;
 
-  final TextStyle pageTitleStyle = TextStyle(fontSize: 20.0);
+  TextStyle pageTitleStyle;
 
   @override
   Widget build(BuildContext context) {
+    if(MediaQuery.of(context).size.width >500)
+      pageTitleStyle = TextStyle(fontSize: 20.0);
+    else
+      pageTitleStyle = TextStyle(fontSize: 16.0);
     return MouseRegion(
       onHover: (_)=> _hovered(true),
       onExit: (_)=> _hovered(false),

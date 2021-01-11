@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 const String routeHome = "/";
 const String routeAbout = '/about';
+const String routePost = '/post';
 
 final navKey = GlobalKey<NavigatorState>();
 

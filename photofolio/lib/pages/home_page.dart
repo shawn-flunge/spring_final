@@ -127,6 +127,7 @@ class HomePageState extends State<HomePage> {
 
 
   Widget buildCard(BuildContext context, Post post, PostProvider postProvider){
+    print(post.postThumbNail);
     return Container(
       //margin: EdgeInsets.all(50),
       //padding: EdgeInsets.all(50),

@@ -118,31 +118,6 @@ class PostPageState extends State<PostPage>{
 
   }
 
-  Widget buildMain(PostProvider postProvider, UserProvider userProvider){
-    SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.all(20),
-            width: double.infinity,
-            child: buildTitle(postProvider,userProvider),
-          ),
-          Container(
-            width: double.infinity,
-            height: 500,
-            child: buildImageRow(postProvider),
-          ),
-          Container(
-            margin: EdgeInsets.all(20),
-            width: double.infinity,
-            child: buildComment(postProvider),
-          )
-
-        ],
-      ),
-    );
-  }
-
 
   Widget buildTitle(PostProvider postProvider, UserProvider userProvider){
     return Column(

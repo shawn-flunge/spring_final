@@ -20,7 +20,6 @@ class NavigationBarState extends State<NavigationBar>{
 
   int index =0;
   List<Widget> widgets;
-
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
@@ -106,12 +105,6 @@ class NavigationBarState extends State<NavigationBar>{
             flex: 1,
             child: Container(
               margin: EdgeInsets.fromLTRB(30, 0, 10, 0),
-              // child:Text('PHOTOFOLIO',
-              //   style: TextStyle(
-              //     fontSize: 30,
-              //     fontWeight: FontWeight.w400
-              //   ),
-              // ),
               child: SizedBox(
                 height: 30,
                 child: Image(image: AssetImage('logo.png'),fit: BoxFit.scaleDown,alignment: Alignment.centerLeft,),
@@ -197,7 +190,7 @@ class NavigationBarState extends State<NavigationBar>{
             child: Container(
               margin: EdgeInsets.fromLTRB(30, 0, 10, 0),
               child: SizedBox(
-                height: 30,
+                height: 18,
                 child: Image(image: AssetImage('logo.png'),fit: BoxFit.scaleDown,alignment: Alignment.centerLeft,),
               ),
             )
@@ -208,21 +201,6 @@ class NavigationBarState extends State<NavigationBar>{
             selected:index==0,
             onHighlight:onHighlight,
           ),
-          // FlatButton(
-          //   child: Text('Get Started',
-          //     style: TextStyle(
-          //       fontSize: 16
-          //     ),
-          //   ),
-          //   padding : EdgeInsets.fromLTRB(20, 20, 20, 20),
-          //   shape: RoundedRectangleBorder(
-          //     borderRadius: BorderRadius.circular(30)
-          //   ),
-          //   color: Colors.grey[300],
-          //   onPressed: (){
-          //     showLoginDialog(navKey.currentContext,userProvider);
-          //   },
-          // ),
           NavigationItem(
             title: "Login",
             routeName : 'Login',
@@ -240,7 +218,7 @@ class NavigationBarState extends State<NavigationBar>{
             child: Container(
               margin: EdgeInsets.fromLTRB(30, 0, 10, 0),
               child: SizedBox(
-                height: 30,
+                height: 18,
                 child: Image(image: AssetImage('logo.png'),fit: BoxFit.scaleDown,alignment: Alignment.centerLeft,),
               ),
             )

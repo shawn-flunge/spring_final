@@ -26,7 +26,7 @@ class NavigationItem extends StatelessWidget{
   Widget build(BuildContext context) {
     EdgeInsets padding;
     UserProvider userProvider = Provider.of<UserProvider>(context);
-
+    
     if(MediaQuery.of(context).size.width>500){
       padding=EdgeInsets.symmetric(horizontal: 50);
     }else{

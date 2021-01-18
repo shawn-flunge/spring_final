@@ -26,6 +26,7 @@ class NavigationItem extends StatelessWidget{
   Widget build(BuildContext context) {
     EdgeInsets padding;
     UserProvider userProvider = Provider.of<UserProvider>(context);
+    bool isLoginOpend = false;
     
     if(MediaQuery.of(context).size.width>500){
       padding=EdgeInsets.symmetric(horizontal: 50);
@@ -36,13 +37,15 @@ class NavigationItem extends StatelessWidget{
     return GestureDetector(
       onTap : () {
         if(title == 'Login'){
-          showLoginDialog(navKey.currentContext,userProvider);
+          if(isLoginOpend == false){
+            isLoginOpend = true;
+            showLoginDialog(navKey.currentContext,userProvider).then((value) => isLoginOpend = false);
+          }    
         }
         else{
           navKey.currentState.pushNamed(routeName);
           onHighlight(routeName);
-        }
-        
+        }       
       },
       child: Padding(
         padding : padding,
@@ -55,7 +58,7 @@ class NavigationItem extends StatelessWidget{
     );
   }
 
-  showLoginDialog(BuildContext context, UserProvider userProvider){
+  Future<void> showLoginDialog(BuildContext context, UserProvider userProvider){
     return showGeneralDialog(
       context: context,
       barrierColor: Colors.blue.withAlpha(70),

@@ -37,6 +37,9 @@ class VisitPageState extends State<VisitPage> with TickerProviderStateMixin{
   String nickname;
   String imgPath;
   String infoText;
+
+  EdgeInsets containerMargin;
+  
   
   Future<List<Post>> fetchActivity(String nickname) async{
     print('start fetch');
@@ -74,6 +77,9 @@ class VisitPageState extends State<VisitPage> with TickerProviderStateMixin{
     
   }
 
+
+  
+
   @override
   Widget build(BuildContext context) {
 
@@ -92,28 +98,29 @@ class VisitPageState extends State<VisitPage> with TickerProviderStateMixin{
     UserProvider userProvider = Provider.of<UserProvider>(context);
     PostProvider postProvider = Provider.of<PostProvider>(context);
     
+    if(MediaQuery.of(context).size.width>1000){
+      containerMargin = EdgeInsets.fromLTRB(200, 100, 200, 100);
+    }      
+    else{
+      containerMargin=EdgeInsets.fromLTRB(70, 30, 70, 30);
+    }
+
 
     return SingleChildScrollView(
 
       child: Column(
         children: [
-          buildUserInfoSection(context,userProvider),
+          buildUserInfoSection(context,userProvider,containerMargin),
           const Divider(
             color: Colors.black38,
             height: 30,
             thickness: 2,
-            indent: 200,
-            endIndent: 200,
+            indent: 70,
+            endIndent: 70,
           ),
-          
-          // Container(
-          //   margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
-          //   color: Colors.pink,
-          //   height: 1000,
-          //   child: buildUserActivitySection(userLogin, postProvider),
-          // ),
           Container(
-            margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
+            // margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
+            margin: containerMargin,
             // child: buildUserActivitySection(userLogin, postProvider),
             child: FutureBuilder<List<Post>>(
               future: fetchActivity(userProvider.getFriend().nickname),
@@ -132,76 +139,129 @@ class VisitPageState extends State<VisitPage> with TickerProviderStateMixin{
   }
 
 
-  Widget buildUserInfoSection(BuildContext context, UserProvider userProvider) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(200, 10, 200, 10),
-      color: Colors.grey[100],
-      padding: EdgeInsets.fromLTRB(200, 50, 200, 30),
-      
-      child: Row(
-        //crossAxisAlignment: CrossAxisAlignment.center,
-        // mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          //프로필사진, 아이디, 간단 소개
-          Row(
-            children: [
-              Column(
-                children: [
-                  SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: CircleAvatar(  
-                      // backgroundImage: temp.isProfile == false ? Image.asset('../assets/none.png').image : Image.asset('../assets/lee.png').image,
-                      backgroundImage: Image.network(userProvider.getFriend().imgPath ,fit: BoxFit.contain,).image,
-                      //backgroundImage: Image.network('https://picsum.photos/250?image=9').image,
-                      backgroundColor: Color(0xFFFFFFFF),
-                    ),
-                  ),
-                  // Container(
-                  //   width: 200,
-                  //   child: Wrap(
-                  //     children: ac,
-                  //   ),
-                  // ),
-                  
-                ],
-              ),
-              
-              Padding(padding: EdgeInsets.all(30),),
-              Container(
-                child: Column(
-                  // mainAxisSize: MainAxisSize.min,
-                  //mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  
-                  children: <Widget>[           
-                    Container(
-                      // color: Colors.pink,
-                      child: Text(
-                        userProvider.getFriend().nickname == null ? "":userProvider.getFriend().nickname,
-                        style: TextStyle(fontSize: 40),
+  Widget buildUserInfoSection(BuildContext context, UserProvider userProvider,EdgeInsets margin) {
+
+    if(MediaQuery.of(context).size.width>800){
+      return Container(
+        margin: margin,
+        color: Colors.grey[100],
+        padding: EdgeInsets.fromLTRB(200, 50, 200, 30),
+        
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            //프로필사진, 아이디, 간단 소개
+            Row(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: CircleAvatar(  
+                        // backgroundImage: temp.isProfile == false ? Image.asset('../assets/none.png').image : Image.asset('../assets/lee.png').image,
+                        backgroundImage: Image.network(userProvider.getFriend().imgPath ,fit: BoxFit.contain,).image,
+                        //backgroundImage: Image.network('https://picsum.photos/250?image=9').image,
+                        backgroundColor: Color(0xFFFFFFFF),
                       ),
                     ),
-                    Container(
-                      //color: Colors.pink,
-                      child: Text(
-                        userProvider.getFriend().infoText == null ?"":userProvider.getFriend().infoText
-                        // userLogin.getMe().infoText ==null ?"" : userLogin.getMe().infoText,
-                        // temp.isIntro == false ? "" : "안녕하세요"
-                      ),
-                    )                           
                   ],
-                ),
-              )
-              
-            ],
-          ),
-          Padding(padding: EdgeInsets.all(30),),
-          //팔로우, 팔로워       
-        ],
-      ),
-    );
+                ), 
+                Padding(padding: EdgeInsets.all(30),),
+                Container(
+                  child: Column(
+                    // mainAxisSize: MainAxisSize.min,
+                    //mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    
+                    children: <Widget>[           
+                      Container(
+                        // color: Colors.pink,
+                        child: Text(
+                          userProvider.getFriend().nickname == null ? "":userProvider.getFriend().nickname,
+                          style: TextStyle(fontSize: 40),
+                        ),
+                      ),
+                      Container(
+                        //color: Colors.pink,
+                        child: Text(
+                          userProvider.getFriend().infoText == null ?"":userProvider.getFriend().infoText
+                          // userLogin.getMe().infoText ==null ?"" : userLogin.getMe().infoText,
+                          // temp.isIntro == false ? "" : "안녕하세요"
+                        ),
+                      )                           
+                    ],
+                  ),
+                )
+                
+              ],
+            ),
+            Padding(padding: EdgeInsets.all(30),),
+            //팔로우, 팔로워       
+          ],
+        ),
+      );
+    }      
+    else{
+      return Container(
+        margin: margin,
+        color: Colors.grey[100],
+        padding: EdgeInsets.fromLTRB(30, 10, 30, 10),       
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            //프로필사진, 아이디, 간단 소개
+            Column(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: CircleAvatar(  
+                        // backgroundImage: temp.isProfile == false ? Image.asset('../assets/none.png').image : Image.asset('../assets/lee.png').image,
+                        backgroundImage: Image.network(userProvider.getFriend().imgPath ,fit: BoxFit.contain,).image,
+                        //backgroundImage: Image.network('https://picsum.photos/250?image=9').image,
+                        backgroundColor: Color(0xFFFFFFFF),
+                      ),
+                    ),
+                  ],
+                ), 
+                Padding(padding: EdgeInsets.all(30),),
+                Container(
+                  child: Column(
+                    // mainAxisSize: MainAxisSize.min,
+                    //mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    
+                    children: <Widget>[           
+                      Container(
+                        // color: Colors.pink,
+                        child: Text(
+                          userProvider.getFriend().nickname == null ? "":userProvider.getFriend().nickname,
+                          style: TextStyle(fontSize: 40),
+                        ),
+                      ),
+                      Container(
+                        //color: Colors.pink,
+                        child: Text(
+                          userProvider.getFriend().infoText == null ?"":userProvider.getFriend().infoText
+                          // userLogin.getMe().infoText ==null ?"" : userLogin.getMe().infoText,
+                          // temp.isIntro == false ? "" : "안녕하세요"
+                        ),
+                      )                           
+                    ],
+                  ),
+                )
+                
+              ],
+            ),
+            Padding(padding: EdgeInsets.all(30),),
+            //팔로우, 팔로워       
+          ],
+        ),
+      );
+    } 
   }
 
   Widget buildUserActivitySection(UserProvider userProvider, PostProvider postProvider, List<Post> posts){
@@ -239,8 +299,10 @@ class VisitPageState extends State<VisitPage> with TickerProviderStateMixin{
   }
 
   Widget buildGrid(List<Post> posts, PostProvider postProvider){
+    
+
     return GridView.builder(
-      padding: EdgeInsets.all(30),
+      //padding: padding,
       physics: ScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -255,13 +317,24 @@ class VisitPageState extends State<VisitPage> with TickerProviderStateMixin{
   }
 
   Widget buildCard(BuildContext context, Post post, PostProvider postProvider){
+
+    EdgeInsets margin;
+
+    if(MediaQuery.of(context).size.width>800){
+      margin = EdgeInsets.all(30);
+    }      
+    else{
+      margin = EdgeInsets.all(0);
+    }
+
+
     return Container(
-      //margin: EdgeInsets.all(50),
-      //padding: EdgeInsets.all(50),
+      margin: margin,
+      //padding: padding,
       
       child: InkWell(
         child: Card(
-          margin: EdgeInsets.all(20),      
+          margin: EdgeInsets.all(10),      
           elevation: 5,
           clipBehavior: Clip.antiAlias,
           child: Column(
@@ -286,7 +359,13 @@ class VisitPageState extends State<VisitPage> with TickerProviderStateMixin{
         onTap: (){
           print(post.id.toString() + "###################");
           postProvider.selectPost(post);
-          showPostDialog(context);
+          if(MediaQuery.of(context).size.width>710){
+            showPostDialog(context);
+          }
+          else{
+            Navigator.pushNamed(context, routePost);
+          }
+          //showPostDialog(context);
         },
       ),
     );

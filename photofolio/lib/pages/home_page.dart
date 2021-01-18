@@ -16,6 +16,16 @@ import '../provider/user_provider.dart';
 import 'package:http/http.dart' as http;
 
 
+const introduceMyself ='flutter를 이용한 hybrid app과 kotlin, java를 이용한 native app개발에 관심이 많은 신입 개발자 이시헌입니다!\n'+
+'주요 모바일 앱 개발로 포트폴리오 전시 서비스와 학교 심리상담실 예약 솔루션의 모바일 담당,'+
+'스마트폰으로 조종하는 웹게임의 android담당 개발을 했습니다.\n'+
+'포트폴리오 전시 서비스를 개발하며 REST API 서버 개발을 병행하며 Flutter를 이용한 PWA개발을 진행중이며'+
+'학교심리상담 센터 예약 솔루션을 개발하며 Flutter의 WebView와 FCM 푸시알림 서비스를 다뤄봤고 웹 게임의'+
+'컨트롤러를 만들면서 SurfaceView와 ScrollView등 다양한 Layout을 만들어보고 Socket.io를 이용한 웹 과의 연동과'+ 
+'firebase realtime database를 다뤄봤습니다.';
+
+
+
 class HomePage extends StatefulWidget{
 
   HomePageState createState() => HomePageState(); 
@@ -75,21 +85,30 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context){
     UserProvider userProvider = Provider.of<UserProvider>(context);
     PostProvider postProvider = Provider.of<PostProvider>(context);
-    
+    EdgeInsets textMargin;
+
     print(MediaQuery.of(context).size.width);
 
-    if(MediaQuery.of(context).size.width>800)
+    if(MediaQuery.of(context).size.width>800){
       crossAxisCount =3;
-    else
+      textMargin = EdgeInsets.fromLTRB(200, 100, 200, 100);
+    }      
+    else{
       crossAxisCount=2;
+      textMargin=EdgeInsets.fromLTRB(70, 30, 70, 30);
+    }
+      
 
     return SingleChildScrollView(
       
       child: Column(
         children: [
-          Text(
-            'Home Page',
-            style: TextStyle(fontSize: 30),
+          Container(
+            margin: textMargin,
+            child: Text(
+              introduceMyself,
+              style: TextStyle(fontSize: 15),
+            ),
           ),
           Container(
             width: 800,
